@@ -10,8 +10,16 @@ public class Parkschein implements ParkscheinIF {
 
 	@Override
 	public boolean istBezahlt() {
-		// TODO Auto-generated method stub
-		return false;
+		return bezahlt;
 	}
+
+
+	@Override
+	public void setBezahlt(boolean bezahlt) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	
 }
