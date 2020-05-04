@@ -1,2 +1,2 @@
 # Semesterprojekt_SE1
-Parkhaus-Simulation
+Klassen.Parkhaus-Simulation

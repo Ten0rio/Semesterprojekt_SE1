@@ -1,19 +1,19 @@
-US01: Als Autofahrer ziehe ich bei der Einfahrt einen Parkschein
-um in das Parkhaus hinein fahren zu können. 
-US04: Als Autofahrer bezahle ich mein Parkschein, 
-um aus dem Parkhaus herausfahren zu können. 
+US01: Als Autofahrer ziehe ich bei der Einfahrt einen Klassen.Parkschein
+um in das Klassen.Parkhaus hinein fahren zu können. 
+US04: Als Autofahrer bezahle ich mein Klassen.Parkschein, 
+um aus dem Klassen.Parkhaus herausfahren zu können. 
 
-interface Parkschein {
+interface Klassen.Parkschein {
  Prüfen ob Schranke sich  nur öffnet wenn bezahlt
  boolean AutoHatBezahlt();
 }
  
-interface Parkhaus {
- nur wenn Parkschein gezogen wurde oder bezahlt wurde
+interface Klassen.Parkhaus {
+ nur wenn Klassen.Parkschein gezogen wurde oder bezahlt wurde
  boolean Ein/AusfahrtGewähren();
  min/max 
  boolean ParkhausHatPlaetze();
- test auf neues Parkschein
+ test auf neues Klassen.Parkschein
  ticket ParkscheinZiehen();
 } 
  
@@ -21,5 +21,5 @@ interface Parkhaus {
 Interface Autofahrer{
  int woIstMeinAuto();
 
-Interface Automat{
+Interface Klassen.Automat{
     Parkscheinbezahlen()

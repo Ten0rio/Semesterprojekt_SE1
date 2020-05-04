@@ -1,4 +1,4 @@
-public class Automat{
+public class Klassen.Automat{
     Umsatz
     
     Parkscheinbezahlt()
