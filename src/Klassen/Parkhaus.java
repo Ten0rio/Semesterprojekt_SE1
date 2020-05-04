@@ -10,7 +10,6 @@ public class Parkhaus implements ParkhausIF {
 
     @Override
     public void einfahren() {
-
     }
 
     @Override
