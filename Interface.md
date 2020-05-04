@@ -1,6 +1,6 @@
 US01: Als Autofahrer ziehe ich bei der Einfahrt einen Parkschein
 um in das Parkhaus hinein fahren zu können. 
-US04: Als Autofahrer bezahle ich mein Ticket, 
+US04: Als Autofahrer bezahle ich mein Parkschein, 
 um aus dem Parkhaus herausfahren zu können. 
 
 interface Parkschein {
@@ -13,7 +13,7 @@ interface Parkhaus {
  boolean Ein/AusfahrtGewähren();
  min/max 
  boolean ParkhausHatPlaetze();
- test auf neues Ticket
+ test auf neues Parkschein
  ticket ParkscheinZiehen();
 } 
  

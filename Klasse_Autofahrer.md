@@ -1,6 +1,6 @@
 
 public class Parkhausbenutzer{
-    Ticket x;
+    Parkschein x;
     Monatsabo y;
     int Parkplatz/Standort = 340;
     
