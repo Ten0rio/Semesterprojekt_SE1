@@ -4,9 +4,13 @@ import Interfaces.ParkhausIF;
 
 public class Parkhaus implements ParkhausIF {
 
-    int parkPlaetzeMax;
-    int parkplatzbelegt;
-    boolean schrankeOeffnet;
+    private int parkPlaetzeMax;
+    private int parkplatzbelegt;
+    private boolean schrankeOeffnet;
+
+    public Parkhaus(int parkPlaetzeMax){
+        this.parkPlaetzeMax=parkPlaetzeMax;
+    }
 
     @Override
     public void einfahren() {
@@ -19,11 +23,17 @@ public class Parkhaus implements ParkhausIF {
 
     @Override
     public int getParkPlaetzeMax() {
-        return 0;
+        return this.parkPlaetzeMax;
     }
 
     @Override
     public int getParkplatzbelegt() {
-        return 0;
+        return this.parkplatzbelegt;
+    }
+
+    // Ein und ausfahrende Autos mit overload der funktion setParkplatz
+    @Override
+    public void setPakplatzbelegt() {
+
     }
 }

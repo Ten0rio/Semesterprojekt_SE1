@@ -18,5 +18,6 @@ public interface ParkhausIF {
 
     int getParkPlaetzeMax();
     int getParkplatzbelegt();
+    void setPakplatzbelegt();
 
 }
