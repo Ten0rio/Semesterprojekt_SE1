@@ -2,13 +2,14 @@ package JUnit_Tests;
 
 import Klassen.Parkhaus;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParkhausIFTest {
     Parkhaus parkhaus;
-    @AfterEach
+    @BeforeEach
     void init(){
        parkhaus=new Parkhaus(100);
     }
