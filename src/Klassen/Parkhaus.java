@@ -34,7 +34,7 @@ public class Parkhaus extends HttpServlet implements ParkhausIF{
 
         // Actual logic goes here.
         PrintWriter out = response.getWriter();
-        out.println("<h1>" + message + "</h1>");
+        out.println("<h1>" + message + message + "</h1>");
     }
     @Override
     public void einfahren() {
