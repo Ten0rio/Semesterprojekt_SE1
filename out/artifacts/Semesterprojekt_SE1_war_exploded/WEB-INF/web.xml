@@ -5,16 +5,27 @@
          version="4.0">
     <display-name>ServletTutorial</display-name>
 
+
     <servlet>
-        <servlet-name>parkhaus</servlet-name>
+        <servlet-name>parkhausKlasse</servlet-name>
         <servlet-class>Klassen.Parkhaus</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>parkhaus</servlet-name>
-        <url-pattern>/ParkhausKlassen</url-pattern>
+        <servlet-name>parkhausKlasse</servlet-name>
+        <url-pattern>/Parkhausklasse</url-pattern>
     </servlet-mapping>
 
+    <!--
+        <servlet>
+            <servlet-name>parkhaus</servlet-name>
+            <servlet-class>Servlets.DemoServlet</servlet-class>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>parkhaus</servlet-name>
+            <url-pattern>/Parkhaus</url-pattern>
+        </servlet-mapping>
+    -->
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
