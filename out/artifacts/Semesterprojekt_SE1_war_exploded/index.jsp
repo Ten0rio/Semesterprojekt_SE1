@@ -11,12 +11,8 @@
     <title>$Title$</title>
   </head>
   <body>
-  <!--
-  <script src='https://ccmjs.github.io/mkaul-components/parkhaus/versions/ccm.parkhaus-7.0.0.js'>
-  </script><ccm-parkhaus-7-0-0 key='{"name":"ParkhausWithServer","
-  server_url":"http://localhost:8080/ParkhausServlet","
-  extra_buttons":[{"extra_class":"","extra_inner":"sum","extra_popup_title":"ka was aber summe"}],"
-  extra_charts":[]}'></ccm-parkhaus-7-0-0>
-  -->
+
+  <script src='https://ccmjs.github.io/mkaul-components/parkhaus/versions/ccm.parkhaus-7.0.0.js'></script><ccm-parkhaus-7-0-0 key='{"name":"ClientOnlyParkhaus","server_url":"","extra_buttons":[{"extra_class":"","extra_inner":"sum","extra_popup_title":"ka was hauptsache summe"}],"extra_charts":[]}'></ccm-parkhaus-7-0-0>
+
   </body>
 </html>
