@@ -17,18 +17,37 @@ public class DemoServlet extends HttpServlet {
         System.out.println(body);
         String[] params = body.split(",");
         String event = params[0];
-        if ("leave".equals(event)){
+        if ("enter".equals(event)){
+            Integer total = getPersistentTotalCars();
+            total += 1;
+            getApplication().setAttribute("total",total);
+            System.out.println(total);
+        }
+        if ("leave".equals(event)) {
             Float sum = getPersistentSum();
             String priceString = params[4];
-            if(!"_".equals(priceString)){
+            if (!"_".equals(priceString)) {
                 float price = Float.parseFloat(priceString);
                 sum += price;
-                getApplication().setAttribute("sum",sum);
+                getApplication().setAttribute("sum", sum);
             }
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
             out.println(sum);
+
+            int total = getPersistentTotalCars();
+            getApplication().setAttribute("avg",sum/total);
+
+            Float avgtime = getPersistentAvgTimeSpent();
+            String timeString = params[3];
+            if (!"_".equals(timeString)){
+                float time = Float.parseFloat(timeString);
+                avgtime += time;
+                getApplication().setAttribute("avgtime", avgtime/total);
+            }
+
         }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,20 +56,39 @@ public class DemoServlet extends HttpServlet {
         String command = requestParamString[0];
         String param = requestParamString[1];
 
-        if("cmd".equals(command) && "sum".equals(param)){
+        if ("cmd".equals(command) && "sum".equals(param)) {
             Float sum = getPersistentSum();
 
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
-            out.println(sum/100);
+            out.println(sum / 100);
 
-            System.out.println("sum = " + sum );
+            System.out.println("sum = " + sum);
+        }
+        if ("cmd".equals(command) && "avg".equals(param)) {
+            Float avg = getPersistentAvg();
+
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println(avg / 100);
+
+            System.out.println("avg = " + avg);
+        }
+
+        if ("cmd".equals(command) && "avgtimespent".equals(param)) {
+            Float avgtime = getPersistentAvg();
+
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println(avgtime/ 100);
+
+            System.out.println("avgtime = " + avgtime);
         }
         System.out.println(request.getQueryString());
 
     }
 
-    private static String getBody(HttpServletRequest request) throws IOException{
+    private static String getBody(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;
 
@@ -66,24 +104,48 @@ public class DemoServlet extends HttpServlet {
             } else {
                 stringBuilder.append("");
             }
-        }finally {
+        } finally {
             if (bufferedReader != null) {
                 bufferedReader.close();
             }
         }
         return stringBuilder.toString();
-        }
+    }
 
-        private ServletContext getApplication(){
+    private ServletContext getApplication() {
         return getServletConfig().getServletContext();
-        }
+    }
 
-        private Float getPersistentSum(){
+    private Float getPersistentSum() {
         Float sum;
         ServletContext application = getApplication();
-        sum = (Float)application.getAttribute("sum");
-        if(sum == null) sum = 0.0f;
+        sum = (Float) application.getAttribute("sum");
+        if (sum == null) sum = 0.0f;
         return sum;
-        }
+    }
+
+    private Float getPersistentAvg() {
+        Float avg;
+        ServletContext application = getApplication();
+        avg = (Float) application.getAttribute("avg");
+        if (avg == null) avg = 0.0f;
+        return avg;
+    }
+
+    private int getPersistentTotalCars() {
+        Integer total;
+        ServletContext application = getApplication();
+        total = (Integer) application.getAttribute("total");
+        if (total == null) total = 0;
+        return total;
+    }
+
+    private Float getPersistentAvgTimeSpent() {
+        Float avgtime;
+        ServletContext application = getApplication();
+        avgtime = (Float) application.getAttribute("avgtime");
+        if (avgtime == null) avgtime = 0.0f;
+        return avgtime;
+    }
 
 }
