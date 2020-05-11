@@ -8,11 +8,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>$Title$</title>
+    <title>Parkaus</title>
+    <script src='https://ccmjs.github.io/mkaul-components/parkhaus/versions/ccm.parkhaus-7.0.0.js'></script>
   </head>
   <body>
 
-  <script src='https://ccmjs.github.io/mkaul-components/parkhaus/versions/ccm.parkhaus-7.0.0.js'></script><ccm-parkhaus-7-0-0 key='{"name":"ClientOnlyParkhaus","server_url":"","extra_buttons":[{"extra_class":"","extra_inner":"sum","extra_popup_title":"ka was hauptsache summe"}],"extra_charts":[]}'></ccm-parkhaus-7-0-0>
+  <ccm-parkhaus-7-0-0
+          server_url="http://localhost:8080/Semesterprojekt_SE1_war_exploded/Parkhaus" key='{"name":"ClientOnlyParkhaus","server_url":"","extra_buttons":[{"extra_class":"","extra_inner":"sum","extra_popup_title":"ka was hauptsache summe"}],"extra_charts":[]}'
+          extra_buttons='["sum","avg"]'
+  ></ccm-parkhaus-7-0-0>
 
   </body>
 </html>
