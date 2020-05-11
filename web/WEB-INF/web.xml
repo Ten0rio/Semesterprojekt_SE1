@@ -6,14 +6,15 @@
     <display-name>ServletTutorial</display-name>
 
     <servlet>
-        <servlet-name>Parkhaus</servlet-name>
+        <servlet-name>parkhaus</servlet-name>
         <servlet-class>Klassen.Parkhaus</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Parkhaus</servlet-name>
-        <url-pattern>/Parkhaus</url-pattern>
+        <servlet-name>parkhaus</servlet-name>
+        <url-pattern>/ParkhausKlassen</url-pattern>
     </servlet-mapping>
+
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
