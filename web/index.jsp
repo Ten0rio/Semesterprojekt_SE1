@@ -12,7 +12,11 @@
   </head>
   <body>
   <script src='https://ccmjs.github.io/mkaul-components/parkhaus/versions/ccm.parkhaus-7.0.0.js'></script>
-  <ccm-parkhaus-7-0-0 key='{"name":"ClientOnlyParkhaus","server_url":"","extra_buttons":[{"extra_class":"",
-  "extra_inner":"","extra_popup_title":""}],"extra_charts":[]}'></ccm-parkhaus-7-0-0>
+  <ccm-parkhaus-7-0-0 key='{"name":"ClientOnlyParkhaus",
+  "server_url":"",
+  "extra_buttons":[{"extra_class":"",
+  "extra_inner":"","extra_popup_title":""}],
+  "extra_charts":[]}'>
+  </ccm-parkhaus-7-0-0>
   </body>
 </html>
