@@ -16,13 +16,12 @@ public class DemoServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        float sum = 0;
         String[] requestParamString = request.getQueryString().split("=");
         String command = requestParamString[0];
         String param = requestParamString[1];
 
         if("cmd".equals(command) && "sum".equals(param)){
-            float sum = 123.0f;
-
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
             out.println(sum);
