@@ -157,7 +157,7 @@ public class DemoServlet extends HttpServlet {
         return avg;
     }
 
-    private int getPersistentTotalCars() {
+    private Integer getPersistentTotalCars() {
         Integer total;
         ServletContext application = getApplication();
         total = (Integer) application.getAttribute("total");
