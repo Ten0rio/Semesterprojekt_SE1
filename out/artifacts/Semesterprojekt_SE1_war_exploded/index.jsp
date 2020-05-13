@@ -18,5 +18,7 @@
           extra_buttons='["sum","avg","avgtimespent"]'
   ></ccm-parkhaus-7-0-0>
 
+  <p></p>
+
   </body>
 </html>

@@ -26,29 +26,46 @@ public class DemoServlet extends HttpServlet {
         if ("leave".equals(event)) {
             Float sum = getPersistentSum();
             String priceString = params[4];
-            if (!"_".equals(priceString)) {
-                float price = Float.parseFloat(priceString);
-                sum += price;
-                getApplication().setAttribute("sum", sum);
+            String timeString = params[3];
+
+
+            if(!"_".equals(priceString)) {
+                float time = Float.parseFloat(timeString);
+                if(time < 15000){
+                    //Es wird keine Gebühr fällig
+                } else {
+                    if (!"_".equals(priceString)) {
+                        float price = Float.parseFloat(priceString);
+                        sum += price;
+                        getApplication().setAttribute("sum", sum);
+                    }
+                    response.setContentType("text/html");
+                    PrintWriter out = response.getWriter();
+                    out.println(sum);
+                }
             }
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(sum);
+
+
 
             int total = getPersistentTotalCars();
             getApplication().setAttribute("avg",sum/total);
 
             Float avgtime = getPersistentAvgTimeSpent();
-            String timeString = params[3];
+            //timeString = params[3]; // redundant
             if (!"_".equals(timeString)){
                 float time = Float.parseFloat(timeString);
                 avgtime += time;
                 getApplication().setAttribute("avgtime", avgtime/total);
             }
 
+
+
         }
 
-    }
+
+        }
+
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -61,9 +78,10 @@ public class DemoServlet extends HttpServlet {
 
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
-            out.println(sum / 100);
+            out.println("sum =" + sum / 100);
 
             System.out.println("sum = " + sum);
+            System.out.println(getApplication().getAttribute("preis")+ "<-- Preis");
         }
         if ("cmd".equals(command) && "avg".equals(param)) {
             Float avg = getPersistentAvg();
@@ -83,6 +101,13 @@ public class DemoServlet extends HttpServlet {
             out.println(avgtime/ 100);
 
             System.out.println("avgtime = " + avgtime);
+        }
+
+        if ("cmd".equals(command)&& "config&name".equals(param) ){
+            System.out.println("testststtstslgeabwäd");
+            response.setContentType("text/html");
+            PrintWriter out =  response.getWriter();
+            out.println("20,8,24,100,100");
         }
         System.out.println(request.getQueryString());
 
