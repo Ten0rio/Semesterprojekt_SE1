@@ -81,7 +81,6 @@ public class DemoServlet extends HttpServlet {
             out.println("sum =" + sum / 100);
 
             System.out.println("sum = " + sum);
-            System.out.println(getApplication().getAttribute("preis")+ "<-- Preis");
         }
         if ("cmd".equals(command) && "avg".equals(param)) {
             Float avg = getPersistentAvg();
