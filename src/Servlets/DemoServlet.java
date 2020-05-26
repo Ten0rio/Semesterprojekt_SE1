@@ -1,5 +1,7 @@
 package Servlets;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -71,13 +73,15 @@ public class DemoServlet extends HttpServlet {
 
         String[] requestParamString = request.getQueryString().split("=");
         String command = requestParamString[0];
-        String param = requestParamString[1];
+        String param = request.getParameter("cmd");
+
+        PrintWriter out =  response.getWriter();
 
         if ("cmd".equals(command) && "sum".equals(param)) {
             Float sum = getPersistentSum();
 
             response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
+
             out.println("sum =" + sum / 100);
 
             System.out.println("sum = " + sum);
@@ -86,7 +90,7 @@ public class DemoServlet extends HttpServlet {
             Float avg = getPersistentAvg();
 
             response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
+
             out.println(avg / 100);
 
             System.out.println("avg = " + avg);
@@ -96,18 +100,40 @@ public class DemoServlet extends HttpServlet {
             Float avgtime = getPersistentAvg();
 
             response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
+
             out.println(avgtime/ 100);
 
             System.out.println("avgtime = " + avgtime);
         }
 
-        if ("cmd".equals(command)&& "config&name".equals(param) ){
+        if ("cmd".equals(command)&& "config".equals(param) ){
             System.out.println("testststtstslgeabwäd");
             response.setContentType("text/html");
-            PrintWriter out =  response.getWriter();
+
             out.println("20,8,24,100,100");
         }
+
+        if ("cmd".equals(command) && "chart".equals(param) ){
+            System.out.println("chart");
+            int[] a = new int[]{1,2,3};
+
+            JsonObject root = Json.createObjectBuilder()
+                    //.add("data", Json.createArrayBuilder()
+                           // .add(Json.createObjectBuilder()
+                                    .add("x", "s")       //Auto.asNrArray(autos())
+                                    .add("y", "[1,2,3]") //Auto.asParkzeitArray(autos())
+                                    .add("type","bar")
+                                    .add("name", "Parkzeit")
+
+
+                  //  )
+            .build();
+            System.out.println(root.toString());
+            out.println(root.toString());
+
+
+        }
+
         System.out.println(request.getQueryString());
 
     }
