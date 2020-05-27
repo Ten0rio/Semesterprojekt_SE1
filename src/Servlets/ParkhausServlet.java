@@ -57,7 +57,7 @@ public class ParkhausServlet extends HttpServlet {
             //alleAutosList.add(kek);
             ArrayList<Auto> allcars = autos();
             allcars.add(new Auto(params[1],params[7],params[3]));
-            System.out.println(allcars.size());
+            //System.out.println(allcars.size());
             getApplication().setAttribute("autos", allcars);
 
         }
