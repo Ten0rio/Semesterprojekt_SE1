@@ -4,6 +4,7 @@ import Interfaces.AutoIF;
 
 public class Auto implements AutoIF {
 
+
     String number = "";
     String parkplatz = "";
     String parkzeit = "";
