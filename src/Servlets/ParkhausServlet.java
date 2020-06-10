@@ -15,7 +15,6 @@ import Klassen.Auto;
 @WebServlet("/ParkhausServlet")
 public class ParkhausServlet extends HttpServlet {
 
-    //ArrayList<Auto> alleAutosList = new ArrayList<Auto>();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,12 +22,19 @@ public class ParkhausServlet extends HttpServlet {
         System.out.println(body);
         String[] params = body.split(",");
         String event = params[0];
+
+
+
         if ("enter".equals(event)) {
             Integer total = getPersistentTotalCars();
             total += 1;
             getApplication().setAttribute("total", total);
 
         }
+
+
+
+
         if ("leave".equals(event)) {
             Float sum = getPersistentSum(); // Summe sum = getsum();
             String priceString = params[4];
@@ -53,8 +59,7 @@ public class ParkhausServlet extends HttpServlet {
                 getApplication().setAttribute("avgtime", avgtime / total);
             }
 
-            //Auto kek = new Auto(params[1],params[7],params[3]);
-            //alleAutosList.add(kek);
+
             ArrayList<Auto> allcars = autos();
             allcars.add(new Auto(params[1],params[7],params[3]));
             //System.out.println(allcars.size());
@@ -62,22 +67,8 @@ public class ParkhausServlet extends HttpServlet {
 
         }
 
-
-       /* response.setContentType("text,html");
-        ServletOutputStream out = response.getOutputStream();
-
-        out.write(params[0]+","+params[1]+","+params[2]+","
-                +params[3]+","+42+","+params[5]+","
-                +params[6]+","+params[7]);
-
-
-
-        String x = (params[0]+","+params[1]+","+params[2]+","
-                +params[3]+","+42+","+params[5]+","
-                +params[6]+","+params[7]);
-        out.print(x);
-        */
-
+        //#######################################################################################################################
+        //#######################################################################################################################
 
     }
 
@@ -88,6 +79,10 @@ public class ParkhausServlet extends HttpServlet {
         //String param = requestParamString[1];
         String param = request.getParameter("cmd");
 
+
+
+
+
         if ("cmd".equals(command) && "sum".equals(param)) {
             Float sum = getPersistentSum();
 
@@ -97,6 +92,10 @@ public class ParkhausServlet extends HttpServlet {
 
             System.out.println("sum = " + sum);
         }
+
+
+
+
         if ("cmd".equals(command) && "avg".equals(param)) {
             Float avg = getPersistentAvg();
 
@@ -107,6 +106,10 @@ public class ParkhausServlet extends HttpServlet {
             System.out.println("avg = " + avg);
         }
 
+
+
+
+
         if ("cmd".equals(command) && "avgtimespent".equals(param)) {
             Float avgtime = getPersistentAvg();
 
@@ -116,6 +119,10 @@ public class ParkhausServlet extends HttpServlet {
 
             System.out.println("avgtime = " + avgtime);
         }
+
+
+
+
 
         if("cmd".equals(command) && "chart".equals(param)){
 
@@ -134,7 +141,6 @@ public class ParkhausServlet extends HttpServlet {
             //------------------------
 
 
-
             for(int i= 0; i < listeAllerAutos.size()-1; i++){
                 jsonString +=   listeAllerAutos.get(i).getParkzeit()  + ","; //die Parkzeiten der Autos werden in Strings fuer die y-werte transformiert
             }
@@ -146,9 +152,32 @@ public class ParkhausServlet extends HttpServlet {
             out.println(jsonString);
 
         }
+
+
+
+
+
+        if("cmd".equals(command) && "ParkdauerAnParkplatz".equals(param)){
+
+            ArrayList<Auto> listeAllerAutos = autos();
+            double parkzeit = listeAllerAutos.stream()
+                    .filter( a -> a.getParkplatz().equals("1") )
+                    .map( a -> Double.parseDouble(a.getParkzeit()))
+                    .reduce(0.0, (x,y) -> x+y );
+
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println("Die gesamte Parkzeit auf Parkplatz 1 betraegt: " + parkzeit/ 1000 + "s");
+        }
+
+
+
+
         System.out.println(request.getQueryString());
 
     }
+
+
 
     private static String getBody(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -174,9 +203,17 @@ public class ParkhausServlet extends HttpServlet {
         return stringBuilder.toString();
     }
 
+
+
+
+
     private ServletContext getApplication() {
         return getServletConfig().getServletContext();
     }
+
+
+
+
 
     private Float getPersistentSum() {
         Float sum;
@@ -186,6 +223,10 @@ public class ParkhausServlet extends HttpServlet {
         return sum;
     }
 
+
+
+
+
     private Float getPersistentAvg() {
         Float avg;
         ServletContext application = getApplication();
@@ -193,6 +234,9 @@ public class ParkhausServlet extends HttpServlet {
         if (avg == null) avg = 0.0f;
         return avg;
     }
+
+
+
 
     private Integer getPersistentTotalCars() {
         Integer total;
@@ -202,6 +246,9 @@ public class ParkhausServlet extends HttpServlet {
         return total;
     }
 
+
+
+
     private Float getPersistentAvgTimeSpent() {
         Float avgtime;
         ServletContext application = getApplication();
@@ -209,6 +256,10 @@ public class ParkhausServlet extends HttpServlet {
         if (avgtime == null) avgtime = 0.0f;
         return avgtime;
     }
+
+
+
+
 
     private ArrayList<Auto> autos() {
         ServletContext application = getApplication();
