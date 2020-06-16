@@ -272,6 +272,8 @@ public class ParkhausServlet extends HttpServlet {
 
 
      private String JsonChart(){
+
+
         JsonObject chart = Json.createObjectBuilder()
             .add("data", Json.createArrayBuilder()
                 .add( Json.createObjectBuilder()
@@ -289,6 +291,7 @@ public class ParkhausServlet extends HttpServlet {
         JsonArrayBuilder array = Json.createArrayBuilder();
         for (Auto i : autos()) {
             array.add(i.getNumber());
+
         }
         return  array.build();
     }
@@ -301,6 +304,8 @@ public class ParkhausServlet extends HttpServlet {
         }
         return  array.build();
     }
+
+
 
 
 
