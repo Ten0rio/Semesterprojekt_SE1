@@ -132,8 +132,9 @@ public class ParkhausServlet extends HttpServlet {
         if("cmd".equals(command) && "chart".equals(param)){
 
 
-           // PrintWriter out = response.getWriter();
-            //out.println(JsonChart());
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println(JsonChart());
 
 /*
             ArrayList<Auto> listeAllerAutos = autos();
@@ -274,8 +275,8 @@ public class ParkhausServlet extends HttpServlet {
         JsonObject chart = Json.createObjectBuilder()
             .add("data", Json.createArrayBuilder()
                 .add( Json.createObjectBuilder()
-                        .add("x","getJsonArrayNumber()")
-                        .add("y", "getJsonArrayParkzeit()")
+                        .add("x",getJsonArrayNumber())
+                        .add("y", getJsonArrayParkzeit())
                         .add("type", "bar"))).build();
 
         return chart.toString();
