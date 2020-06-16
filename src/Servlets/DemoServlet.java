@@ -113,26 +113,7 @@ public class DemoServlet extends HttpServlet {
             out.println("20,8,24,100,100");
         }
 
-        if ("cmd".equals(command) && "chart".equals(param) ){
-            System.out.println("chart");
-            int[] a = new int[]{1,2,3};
 
-            JsonObject root = Json.createObjectBuilder()
-                    //.add("data", Json.createArrayBuilder()
-                           // .add(Json.createObjectBuilder()
-                                    .add("x", "s")       //Auto.asNrArray(autos())
-                                    .add("y", "[1,2,3]") //Auto.asParkzeitArray(autos())
-                                    .add("type","bar")
-                                    .add("name", "Parkzeit")
-
-
-                  //  )
-            .build();
-            System.out.println(root.toString());
-            out.println(root.toString());
-
-
-        }
 
         System.out.println(request.getQueryString());
 

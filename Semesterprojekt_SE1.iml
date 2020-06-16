@@ -38,5 +38,6 @@
     </orderEntry>
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="org.jasonjson:jason:0.1.1" level="project" />
+    <orderEntry type="library" name="javax.json-1.1.4" level="project" />
   </component>
 </module>

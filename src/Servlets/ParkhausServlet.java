@@ -1,5 +1,6 @@
 package Servlets;
 
+import javax.json.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,10 +11,14 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+
 import Klassen.Auto;
 
 @WebServlet("/ParkhausServlet")
 public class ParkhausServlet extends HttpServlet {
+
+
 
 
     @Override
@@ -127,6 +132,10 @@ public class ParkhausServlet extends HttpServlet {
         if("cmd".equals(command) && "chart".equals(param)){
 
 
+           // PrintWriter out = response.getWriter();
+            //out.println(JsonChart());
+
+/*
             ArrayList<Auto> listeAllerAutos = autos();
             String jsonString = "{" + " \"data\": [" + " {" + " \"x\": [";
 
@@ -150,8 +159,10 @@ public class ParkhausServlet extends HttpServlet {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
             out.println(jsonString);
-
+*/
         }
+
+
 
 
 
@@ -258,6 +269,37 @@ public class ParkhausServlet extends HttpServlet {
     }
 
 
+
+     private String JsonChart(){
+        JsonObject chart = Json.createObjectBuilder()
+            .add("data", Json.createArrayBuilder()
+                .add( Json.createObjectBuilder()
+                        .add("x","getJsonArrayNumber()")
+                        .add("y", "getJsonArrayParkzeit()")
+                        .add("type", "bar"))).build();
+
+        return chart.toString();
+
+    }
+     //z.B. : { "data": [ { "x": ["1","2","3","4","7","5","8","10" ], "y": [400,398,199,800,400,1200,401,199 ], "type": "bar" } ]}
+
+    private JsonArray getJsonArrayNumber() {
+
+        JsonArrayBuilder array = Json.createArrayBuilder();
+        for (Auto i : autos()) {
+            array.add(i.getNumber());
+        }
+        return  array.build();
+    }
+
+    private JsonArray getJsonArrayParkzeit() {
+
+        JsonArrayBuilder array = Json.createArrayBuilder();
+        for (Auto i : autos()) {
+            array.add(i.getParkzeit());
+        }
+        return  array.build();
+    }
 
 
 
