@@ -1,6 +1,18 @@
 package Servlets;
 
+import Klassen.Auto;
+import Klassen.Parkhaus_Fachlogik;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -8,115 +20,94 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 
-@WebServlet("/Parkhaus")
+@WebServlet({"/DemoServlet"})
 public class DemoServlet extends HttpServlet {
 
-    @Override
+    public DemoServlet() {}
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String body = getBody(request);
         System.out.println(body);
         String[] params = body.split(",");
         String event = params[0];
-        if ("enter".equals(event)){
-            Integer total = getPersistentTotalCars();
-            total += 1;
-            getApplication().setAttribute("total",total);
-            System.out.println(total);
+
+        Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+
+        if ("enter".equals(event)) {
+
+
         }
+
         if ("leave".equals(event)) {
-            Float sum = getPersistentSum();
+
+            parkhaus.IncAnzahlBesucher();
+
             String priceString = params[4];
-            String timeString = params[3];
-
-
-            if(!"_".equals(priceString)) {
-                float time = Float.parseFloat(timeString);
-                if(time < 15000){
-                    //Es wird keine Gebühr fällig
-                } else {
-                    if (!"_".equals(priceString)) {
-                        float price = Float.parseFloat(priceString);
-                        sum += price;
-                        getApplication().setAttribute("sum", sum);
-                    }
-                    response.setContentType("text/html");
-                    PrintWriter out = response.getWriter();
-                    out.println(sum);
-                }
+            if (!"_".equals(priceString)) {
+                int price = Integer.parseInt(priceString);
+                parkhaus.sumEinnahmen(price);
             }
 
 
+            ArrayList<Auto> allcars = this.autos();
+            allcars.add(new Auto(params[1], params[7], params[3]));
+            this.getApplication().setAttribute("autos", allcars);
 
-            int total = getPersistentTotalCars();
-            getApplication().setAttribute("avg",sum/total);
-
-            Float avgtime = getPersistentAvgTimeSpent();
-            //timeString = params[3]; // redundant
-            if (!"_".equals(timeString)){
-                float time = Float.parseFloat(timeString);
-                avgtime += time;
-                getApplication().setAttribute("avgtime", avgtime/total);
-            }
-
-
-
+            getApplication().setAttribute("Parkhaus", parkhaus);
         }
 
-
-        }
-
-
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String[] requestParamString = request.getQueryString().split("=");
         String command = requestParamString[0];
         String param = request.getParameter("cmd");
 
-        PrintWriter out =  response.getWriter();
+        Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+
+        PrintWriter out = response.getWriter();
+        response.setContentType("text/html");
+
+
 
         if ("cmd".equals(command) && "sum".equals(param)) {
-            Float sum = getPersistentSum();
-
-            response.setContentType("text/html");
-
-            out.println("sum =" + sum / 100);
-
-            System.out.println("sum = " + sum);
+            double summe = parkhaus.getSummeEinnahmen();
+            out.println(String.format("%1.2f",summe));
+            System.out.println("sum = " +String.format("%1.2f",summe));
         }
+
         if ("cmd".equals(command) && "avg".equals(param)) {
-            Float avg = getPersistentAvg();
-
-            response.setContentType("text/html");
-
-            out.println(avg / 100);
-
-            System.out.println("avg = " + avg);
+            double avg = parkhaus.getMeanEinnahmen();
+            out.println(String.format("%1.2f",avg));
+            System.out.println("avg = " + String.format("%1.2f",avg));
         }
 
         if ("cmd".equals(command) && "avgtimespent".equals(param)) {
-            Float avgtime = getPersistentAvg();
-
-            response.setContentType("text/html");
-
-            out.println(avgtime/ 100);
-
-            System.out.println("avgtime = " + avgtime);
+            double avg = parkhaus.getMeanEinnahmen();
+            out.println(String.format("%1.2f",avg));
+            System.out.println("avg = " + String.format("%1.2f",avg));
         }
 
-        if ("cmd".equals(command)&& "config".equals(param) ){
-            System.out.println("testststtstslgeabwäd");
+        if ("cmd".equals(command) && "chart".equals(param)) {
             response.setContentType("text/html");
-
-            out.println("20,8,24,100,100");
+            out.println(this.JsonChart());
         }
 
+        if ("cmd".equals(command) && "ParkdauerAnParkplatz".equals(param)) {
+            ArrayList<Auto> listeAllerAutos = this.autos();
+            double parkzeit = (Double)listeAllerAutos.stream().filter((a) -> {
+                return a.getParkplatz().equals("1");
+            }).map((a) -> {
+                return Double.parseDouble(a.getParkzeit());
+            }).reduce(0.0D, (x, y) -> {
+                return x + y;
+            });
 
+            out.println("Die gesamte Parkzeit auf Parkplatz 1 betraegt: " + parkzeit / 1000.0D + "s");
+        }
 
         System.out.println(request.getQueryString());
-
     }
 
     private static String getBody(HttpServletRequest request) throws IOException {
@@ -128,8 +119,10 @@ public class DemoServlet extends HttpServlet {
             if (inputStream != null) {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 char[] charbuffer = new char[128];
-                int bytesread = -1;
-                while ((bytesread = bufferedReader.read(charbuffer)) > 0) {
+                boolean var5 = true;
+
+                int bytesread;
+                while((bytesread = bufferedReader.read(charbuffer)) > 0) {
                     stringBuilder.append(charbuffer, 0, bytesread);
                 }
             } else {
@@ -139,44 +132,78 @@ public class DemoServlet extends HttpServlet {
             if (bufferedReader != null) {
                 bufferedReader.close();
             }
+
         }
+
         return stringBuilder.toString();
     }
 
     private ServletContext getApplication() {
-        return getServletConfig().getServletContext();
+        return this.getServletConfig().getServletContext();
     }
 
-    private Float getPersistentSum() {
-        Float sum;
+
+
+
+
+
+
+
+    private String JsonChart() {
+        JsonObject chart = Json.createObjectBuilder().add("data", Json.createArrayBuilder().add(Json.createObjectBuilder().add("x", this.getJsonArrayNumber()).add("y", this.getJsonArrayParkzeit()).add("type", "bar"))).build();
+        return chart.toString();
+    }
+
+    private JsonArray getJsonArrayNumber() {
+        JsonArrayBuilder array = Json.createArrayBuilder();
+        Iterator var2 = this.autos().iterator();
+
+        while(var2.hasNext()) {
+            Auto i = (Auto)var2.next();
+            array.add(i.getNumber());
+        }
+
+        return array.build();
+    }
+
+    private JsonArray getJsonArrayParkzeit() {
+        JsonArrayBuilder array = Json.createArrayBuilder();
+        Iterator var2 = this.autos().iterator();
+
+        while(var2.hasNext()) {
+            Auto i = (Auto)var2.next();
+            array.add(i.getParkzeit());
+        }
+
+        return array.build();
+    }
+
+
+
+
+
+    private ArrayList<Auto> autos() {
+        ServletContext application = this.getApplication();
+        ArrayList<Auto> autos = (ArrayList)application.getAttribute("autos");
+        if (autos == null) {
+            autos = new ArrayList();
+        }
+
+        return autos;
+    }
+
+
+
+
+
+
+    private Parkhaus_Fachlogik getParkhaus_Fachlogik() {
         ServletContext application = getApplication();
-        sum = (Float) application.getAttribute("sum");
-        if (sum == null) sum = 0.0f;
-        return sum;
-    }
+        Parkhaus_Fachlogik parkhaus = (Parkhaus_Fachlogik) application.getAttribute("Parkhaus");
+        if (parkhaus == null) {
+            parkhaus = new Parkhaus_Fachlogik();
+        }
 
-    private Float getPersistentAvg() {
-        Float avg;
-        ServletContext application = getApplication();
-        avg = (Float) application.getAttribute("avg");
-        if (avg == null) avg = 0.0f;
-        return avg;
+        return parkhaus;
     }
-
-    private Integer getPersistentTotalCars() {
-        Integer total;
-        ServletContext application = getApplication();
-        total = (Integer) application.getAttribute("total");
-        if (total == null) total = 0;
-        return total;
-    }
-
-    private Float getPersistentAvgTimeSpent() {
-        Float avgtime;
-        ServletContext application = getApplication();
-        avgtime = (Float) application.getAttribute("avgtime");
-        if (avgtime == null) avgtime = 0.0f;
-        return avgtime;
-    }
-
 }
