@@ -2,9 +2,13 @@ package Klassen;
 
 public class Parkhaus_Fachlogik {
 
-    public Parkhaus_Fachlogik(){}
+    public Parkhaus_Fachlogik(){
+        for( Parkplatz p  : slots){
+            p = new Parkplatz();
+        }
+    }
 
-    //Parkplatz[] slots = new Parkplatz[10];
+    Parkplatz[] slots = new Parkplatz[10];
     private int aktuellImParkhaus;
     private int anzahlBesucher = 0;
     private double summeEinnahmen;
