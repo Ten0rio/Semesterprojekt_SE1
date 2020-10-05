@@ -10,7 +10,7 @@ public class Parkplatz {
         return gesamtParkGebühren;
     }
 
-    public void sumGesamtParkGebühren(float parkGebühren) {
+    public void sumParkGebühren(float parkGebühren) {
         gesamtParkGebühren += parkGebühren;
     }
 }

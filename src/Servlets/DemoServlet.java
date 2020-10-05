@@ -138,45 +138,24 @@ public class DemoServlet extends HttpServlet {
         return stringBuilder.toString();
     }
 
+    //-----------------------------------------------------------------------
+
     private ServletContext getApplication() {
         return this.getServletConfig().getServletContext();
     }
 
 
-
-
+    //------------------------------------------------------------------------
 
 
 
 
     private String JsonChart() {
-        JsonObject chart = Json.createObjectBuilder().add("data", Json.createArrayBuilder().add(Json.createObjectBuilder().add("x", this.getJsonArrayNumber()).add("y", this.getJsonArrayParkzeit()).add("type", "bar"))).build();
+        Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+        JsonObject chart = Json.createObjectBuilder().add("data", Json.createArrayBuilder().add(Json.createObjectBuilder().add("x", parkhaus.getJsonArrayNumber()).add("y", parkhaus.getJsonArrayParkzeit()).add("type", "bar"))).build();
         return chart.toString();
     }
 
-    private JsonArray getJsonArrayNumber() {
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        Iterator var2 = this.autos().iterator();
-
-        while(var2.hasNext()) {
-            Auto i = (Auto)var2.next();
-            array.add(i.getNumber());
-        }
-
-        return array.build();
-    }
-
-    private JsonArray getJsonArrayParkzeit() {
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        Iterator var2 = this.autos().iterator();
-
-        while(var2.hasNext()) {
-            Auto i = (Auto)var2.next();
-            array.add(i.getParkzeit());
-        }
-
-        return array.build();
-    }
 
 
 

@@ -11,14 +11,5 @@ class AutomatIFTest {
     Automat A1;
     Parkschein test;
 
-    @BeforeEach
-    void setup (){
-        A1 = new Automat();
-        test = new Parkschein();
-    }
 
-    @Test
-    void parkscheinbezahlen (){
-        assertEquals(true, test.istBezahlt());
-    }
 }
