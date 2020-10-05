@@ -35,13 +35,13 @@ public class DemoServlet extends HttpServlet {
         Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
 
         if ("enter".equals(event)) {
-
-
+            parkhaus.addImParkhaus(params);
         }
 
         if ("leave".equals(event)) {
 
             parkhaus.IncAnzahlBesucher();
+            parkhaus.addParkschein(params);
 
             String priceString = params[4];
             if (!"_".equals(priceString)) {
@@ -55,6 +55,10 @@ public class DemoServlet extends HttpServlet {
             this.getApplication().setAttribute("autos", allcars);
 
             getApplication().setAttribute("Parkhaus", parkhaus);
+        }
+
+        if ("occupied".equals(event)) {
+            parkhaus.popImParkhaus();
         }
 
     }
@@ -152,7 +156,7 @@ public class DemoServlet extends HttpServlet {
 
     private String JsonChart() {
         Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
-        JsonObject chart = Json.createObjectBuilder().add("data", Json.createArrayBuilder().add(Json.createObjectBuilder().add("x", parkhaus.getJsonArrayNumber()).add("y", parkhaus.getJsonArrayParkzeit()).add("type", "bar"))).build();
+        JsonObject chart = Json.createObjectBuilder().add("data", Json.createArrayBuilder().add(Json.createObjectBuilder().add("x", parkhaus.getJsonArrayNumber()).add("y", parkhaus.getJsonArrayParkgebuehren()).add("type", "bar"))).build();
         return chart.toString();
     }
 

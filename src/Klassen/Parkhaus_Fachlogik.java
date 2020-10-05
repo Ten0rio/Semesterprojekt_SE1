@@ -16,8 +16,8 @@ public class Parkhaus_Fachlogik {
 
     Parkplatz[] slots = new Parkplatz[10];
     ArrayList<Parkschein> tickets = new ArrayList<>();
+    ArrayList<Parkschein> aktuellImParkhaus = new ArrayList<>();
 
-    private int aktuellImParkhaus;
     private int anzahlBesucher = 0;
     private double summeEinnahmen;
 
@@ -48,16 +48,20 @@ public class Parkhaus_Fachlogik {
         tickets.add( new Parkschein(params));
     }
 
+    public void addImParkhaus(String[] params){
+        aktuellImParkhaus.add(new Parkschein(params));
+    }
+
     // pop Parkschein bei cmd == occupied um Autos die nicht ins Parkhaus eingefahren sind auch nicht zu speichern
-    public void popParkschein(){
-        tickets.remove(tickets.size()-1);
+    public void popImParkhaus(){
+        tickets.remove(aktuellImParkhaus.size()-1);
     }
 
 
 
     //---------------------------------------------------------------------------------------------
     // Json-Methoden um Charts zu erzeugen
-    public JsonArray getJsonArrayParkzeit() {
+    public JsonArray getJsonArrayParkgebuehren() {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
         for(Parkschein p : tickets){

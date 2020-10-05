@@ -4,25 +4,25 @@ package Klassen;
 
 public class Parkschein  {
 	
-	int autoNr;
+	private String autoNr;
 	private String zeitAnfang;
 	private String parkzeit;
-	int parkgebuehr ;
+	private String parkgebuehr;
 	private String ticketHash;
 	private String farbe;
 	private String parkplatz;
 
 	public Parkschein(String[] params ){
-		autoNr = Integer.parseInt(params[1]);
+		autoNr = params[1];
 		zeitAnfang = params[2];
 		parkzeit = params[3];
-		parkgebuehr = Integer.parseInt(params[4]);
+		parkgebuehr = params[4];
 		ticketHash = params[5];
 		farbe = params[6];
 		parkplatz = params[7];
 	}
 
-	public int getAutoNr() {
+	public String getAutoNr() {
 		return autoNr;
 	}
 
@@ -34,7 +34,7 @@ public class Parkschein  {
 		return parkzeit;
 	}
 
-	public int getParkgebuehr() {
+	public String getParkgebuehr() {
 		return parkgebuehr;
 	}
 
