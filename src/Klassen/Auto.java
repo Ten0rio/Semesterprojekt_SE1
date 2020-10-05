@@ -1,7 +1,5 @@
 package Klassen;
 
-import Interfaces.AutoIF;
-
 public class Auto implements AutoIF {
 
 

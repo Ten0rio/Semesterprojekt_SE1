@@ -1,6 +1,6 @@
 package Interfaces;
 
-public interface ParkscheinIF {
+public interface IParkschein {
 
 	public boolean istBezahlt();
 	
