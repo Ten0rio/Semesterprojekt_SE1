@@ -1,6 +1,7 @@
 package Servlets;
 
 import Klassen.Auto;
+import Klassen.Manager_View;
 import Klassen.Parkhaus_Fachlogik;
 
 import java.io.BufferedReader;
@@ -48,6 +49,14 @@ public class DemoServlet extends HttpServlet {
                 int price = Integer.parseInt(priceString);
                 parkhaus.sumEinnahmen(price);
             }
+
+            //---------------------VIEWS-------------------------------
+            PrintWriter out = response.getWriter();
+            response.setContentType("text/html");
+
+            Manager_View manager_view = getManager_View();
+            out.println(manager_view.showManagerView());
+            //---------------------------------------------------------
 
 
             ArrayList<Auto> allcars = this.autos();
@@ -183,6 +192,8 @@ public class DemoServlet extends HttpServlet {
 
 
 
+    //--------------------------------------------------------------------------------------------
+
 
     private Parkhaus_Fachlogik getParkhaus_Fachlogik() {
         ServletContext application = getApplication();
@@ -192,5 +203,16 @@ public class DemoServlet extends HttpServlet {
         }
 
         return parkhaus;
+    }
+
+
+    private Manager_View getManager_View() {
+        ServletContext application = getApplication();
+        Manager_View manager_view = (Manager_View) application.getAttribute("Manager_View");
+        if (manager_view == null) {
+            manager_view = new Manager_View(getParkhaus_Fachlogik());
+        }
+
+        return manager_view;
     }
 }

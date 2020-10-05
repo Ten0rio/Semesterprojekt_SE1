@@ -18,6 +18,7 @@ public class Parkhaus_Fachlogik implements IObservable {
 
     Parkplatz[] slots = new Parkplatz[10];
     private ArrayList<Parkschein> tickets = new ArrayList<>();
+    ArrayList<IObserver> views = new ArrayList<>();
    // private ArrayList<Parkschein> aktuellImParkhaus = new ArrayList<>();
 
     private int anzahlBesucher = 0;
@@ -48,6 +49,7 @@ public class Parkhaus_Fachlogik implements IObservable {
 
     public void addParkschein(String[] params){
         tickets.add( new Parkschein(params));
+        notifyObservers();
     }
 
  /*   public void addImParkhaus(String[] params){

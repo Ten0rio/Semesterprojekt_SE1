@@ -1,5 +1,7 @@
 package Klassen;
 
+import java.security.PublicKey;
+
 public class Parkplatz {
 
     public Parkplatz(){}
@@ -13,4 +15,5 @@ public class Parkplatz {
     public void sumParkGebühren(float parkGebühren) {
         gesamtParkGebühren += parkGebühren;
     }
+
 }
