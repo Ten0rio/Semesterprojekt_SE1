@@ -1,6 +1,6 @@
 package Klassen;
 
-public class Auto implements AutoIF {
+public class Auto  {
 
 
     String number = "";
