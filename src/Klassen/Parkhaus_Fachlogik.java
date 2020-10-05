@@ -1,12 +1,14 @@
 package Klassen;
 
+import Interfaces.IObservable;
+import Interfaces.IObserver;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class Parkhaus_Fachlogik {
+public class Parkhaus_Fachlogik implements IObservable {
 
     public Parkhaus_Fachlogik(){
         for( Parkplatz p  : slots){
@@ -65,7 +67,7 @@ public class Parkhaus_Fachlogik {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
         for(Parkschein p : tickets){
-            array.add(p.getParkgebuehr());
+            array.add(Integer.parseInt(p.getParkgebuehr())/100.0);
         }
 
         return array.build();
@@ -77,9 +79,30 @@ public class Parkhaus_Fachlogik {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
         for(Parkschein p : tickets){
-            array.add(p.getAutoNr());
+            array.add("Nr."+p.getAutoNr());
         }
 
         return array.build();
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    // Obeservable Methods:
+
+    @Override
+    public void add(IObserver x) {
+        views.add(x);
+    }
+
+    @Override
+    public void remove(IObserver x) {
+        views.remove(x);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for( IObserver v : views){
+            v.update();
+        }
     }
 }

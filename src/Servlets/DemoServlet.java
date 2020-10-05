@@ -151,7 +151,16 @@ public class DemoServlet extends HttpServlet {
 
     private String JsonChart() {
         Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
-        JsonObject chart = Json.createObjectBuilder().add("data", Json.createArrayBuilder().add(Json.createObjectBuilder().add("x", parkhaus.getJsonArrayNumber()).add("y", parkhaus.getJsonArrayParkgebuehren()).add("type", "bar"))).build();
+        JsonObject chart = Json.createObjectBuilder()
+                .add("data", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                                .add("x", parkhaus.getJsonArrayNumber())
+                                .add("y", parkhaus.getJsonArrayParkgebuehren())
+                                .add("type", "bar")
+                                .add("name","Gebuehren in Euro")
+                        )
+                )
+                .build();
         return chart.toString();
     }
 
