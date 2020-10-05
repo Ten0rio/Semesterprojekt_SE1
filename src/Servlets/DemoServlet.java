@@ -35,7 +35,7 @@ public class DemoServlet extends HttpServlet {
         Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
 
         if ("enter".equals(event)) {
-            parkhaus.addImParkhaus(params);
+
         }
 
         if ("leave".equals(event)) {
@@ -55,10 +55,6 @@ public class DemoServlet extends HttpServlet {
             this.getApplication().setAttribute("autos", allcars);
 
             getApplication().setAttribute("Parkhaus", parkhaus);
-        }
-
-        if ("occupied".equals(event)) {
-            parkhaus.popImParkhaus();
         }
 
     }
@@ -94,7 +90,6 @@ public class DemoServlet extends HttpServlet {
         }
 
         if ("cmd".equals(command) && "chart".equals(param)) {
-            response.setContentType("text/html");
             out.println(this.JsonChart());
         }
 

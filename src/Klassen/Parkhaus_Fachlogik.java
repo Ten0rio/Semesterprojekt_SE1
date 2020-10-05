@@ -15,11 +15,11 @@ public class Parkhaus_Fachlogik {
     }
 
     Parkplatz[] slots = new Parkplatz[10];
-    ArrayList<Parkschein> tickets = new ArrayList<>();
-    ArrayList<Parkschein> aktuellImParkhaus = new ArrayList<>();
+    private ArrayList<Parkschein> tickets = new ArrayList<>();
+   // private ArrayList<Parkschein> aktuellImParkhaus = new ArrayList<>();
 
     private int anzahlBesucher = 0;
-    private double summeEinnahmen;
+    private double summeEinnahmen = 0;
 
 
     public void IncAnzahlBesucher() {
@@ -48,14 +48,14 @@ public class Parkhaus_Fachlogik {
         tickets.add( new Parkschein(params));
     }
 
-    public void addImParkhaus(String[] params){
+ /*   public void addImParkhaus(String[] params){
         aktuellImParkhaus.add(new Parkschein(params));
     }
 
     // pop Parkschein bei cmd == occupied um Autos die nicht ins Parkhaus eingefahren sind auch nicht zu speichern
     public void popImParkhaus(){
-        tickets.remove(aktuellImParkhaus.size()-1);
-    }
+        aktuellImParkhaus.remove(aktuellImParkhaus.size()-1);
+    }*/
 
 
 
