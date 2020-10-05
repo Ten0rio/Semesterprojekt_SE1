@@ -1,3 +1,4 @@
+
 <%--
   Created by IntelliJ IDEA.
   User: mtrap
@@ -10,6 +11,7 @@
   <head>
     <title>Parkhaus</title>
     <script src='https://ccmjs.github.io/mkaul-components/parkhaus/versions/ccm.parkhaus-7.0.0.js'></script>
+
   </head>
   <body>
 
@@ -18,10 +20,40 @@
           extra_buttons='["sum","avg","avgtimespent","ParkdauerAnParkplatz"]'
           extra_charts='["chart"]'
 
-
   ></ccm-parkhaus-7-0-0>
 
-
-
   </body>
+
 </html>
+
+
+
+
+
+
+<html>
+  <head>
+
+    <style>
+      table, th, td {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+
+<table id="mytable">
+   <tr>
+     <th>TagesEinnahmen</th>
+     <th>WochenEinnahmen</th>
+   </tr>
+  <tr>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+
+ </table>
+
+ </body>
+</html>
+

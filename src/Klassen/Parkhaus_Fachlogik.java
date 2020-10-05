@@ -46,9 +46,14 @@ public class Parkhaus_Fachlogik implements IObservable {
         return anzahlBesucher;
     }
 
+    public ArrayList<Parkschein> getTickets() {
+        return tickets;
+    }
 
     public void addParkschein(String[] params){
         tickets.add( new Parkschein(params));
+        IncAnzahlBesucher();
+        sumEinnahmen(Integer.parseInt(params[4]));
         notifyObservers();
     }
 

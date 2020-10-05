@@ -3,6 +3,7 @@ package Servlets;
 import Klassen.Auto;
 import Klassen.Manager_View;
 import Klassen.Parkhaus_Fachlogik;
+import Klassen.Parkschein;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,27 +42,18 @@ public class DemoServlet extends HttpServlet {
 
         if ("leave".equals(event)) {
 
-            parkhaus.IncAnzahlBesucher();
             parkhaus.addParkschein(params);
 
-            String priceString = params[4];
-            if (!"_".equals(priceString)) {
-                int price = Integer.parseInt(priceString);
-                parkhaus.sumEinnahmen(price);
-            }
 
             //---------------------VIEWS-------------------------------
-            PrintWriter out = response.getWriter();
             response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
 
             Manager_View manager_view = getManager_View();
             out.println(manager_view.showManagerView());
             //---------------------------------------------------------
 
 
-            ArrayList<Auto> allcars = this.autos();
-            allcars.add(new Auto(params[1], params[7], params[3]));
-            this.getApplication().setAttribute("autos", allcars);
 
             getApplication().setAttribute("Parkhaus", parkhaus);
         }
@@ -102,9 +94,17 @@ public class DemoServlet extends HttpServlet {
             out.println(this.JsonChart());
         }
 
+        if ("cmd".equals(command) && "config".equals(param)) {
+            // create Objects in Servlet Context
+            getParkhaus_Fachlogik();
+            getManager_View();
+        }
+
+
+
         if ("cmd".equals(command) && "ParkdauerAnParkplatz".equals(param)) {
-            ArrayList<Auto> listeAllerAutos = this.autos();
-            double parkzeit = (Double)listeAllerAutos.stream().filter((a) -> {
+            ArrayList<Parkschein> tickets = parkhaus.getTickets();
+            double parkzeit = (Double)tickets.stream().filter((a) -> {
                 return a.getParkplatz().equals("1");
             }).map((a) -> {
                 return Double.parseDouble(a.getParkzeit());
@@ -112,11 +112,14 @@ public class DemoServlet extends HttpServlet {
                 return x + y;
             });
 
-            out.println("Die gesamte Parkzeit auf Parkplatz 1 betraegt: " + parkzeit / 1000.0D + "s");
+            out.println("Die gesamte Parkzeit auf Parkplatz 1 betraegt: " + String.format("%1.2f",parkzeit / 1000.0) + "s");
         }
 
         System.out.println(request.getQueryString());
     }
+
+
+    //---------------------------------------------------------------------------------------------------------
 
     private static String getBody(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -178,19 +181,6 @@ public class DemoServlet extends HttpServlet {
 
 
 
-    private ArrayList<Auto> autos() {
-        ServletContext application = this.getApplication();
-        ArrayList<Auto> autos = (ArrayList)application.getAttribute("autos");
-        if (autos == null) {
-            autos = new ArrayList();
-        }
-
-        return autos;
-    }
-
-
-
-
 
     //--------------------------------------------------------------------------------------------
 
@@ -200,6 +190,7 @@ public class DemoServlet extends HttpServlet {
         Parkhaus_Fachlogik parkhaus = (Parkhaus_Fachlogik) application.getAttribute("Parkhaus");
         if (parkhaus == null) {
             parkhaus = new Parkhaus_Fachlogik();
+            getApplication().setAttribute("Parkhaus", parkhaus);
         }
 
         return parkhaus;
@@ -210,7 +201,10 @@ public class DemoServlet extends HttpServlet {
         ServletContext application = getApplication();
         Manager_View manager_view = (Manager_View) application.getAttribute("Manager_View");
         if (manager_view == null) {
-            manager_view = new Manager_View(getParkhaus_Fachlogik());
+            Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+            manager_view = new Manager_View(parkhaus);
+            parkhaus.add(manager_view);
+            getApplication().setAttribute("Manager_View", manager_view);
         }
 
         return manager_view;
