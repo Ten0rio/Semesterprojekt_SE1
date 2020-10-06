@@ -1,9 +1,6 @@
 package Servlets;
 
-import Klassen.Auto;
-import Klassen.Manager_View;
-import Klassen.Parkhaus_Fachlogik;
-import Klassen.Parkschein;
+import Klassen.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,17 +40,6 @@ public class DemoServlet extends HttpServlet {
         if ("leave".equals(event)) {
 
             parkhaus.addParkschein(params);
-
-
-            //---------------------VIEWS-------------------------------
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-
-            Manager_View manager_view = getManager_View();
-            out.println(manager_view.showManagerView());
-            //---------------------------------------------------------
-
-
 
             getApplication().setAttribute("Parkhaus", parkhaus);
         }
@@ -95,14 +81,14 @@ public class DemoServlet extends HttpServlet {
         }
 
         if ("cmd".equals(command) && "Manager_View".equals(param)) {
-            Manager_View manager_view = getManager_View();
-            out.println(manager_view.showManagerView());
+            out.println(showManagerView());
         }
 
         if ("cmd".equals(command) && "config".equals(param)) {
             // create Objects in Servlet Context
             getParkhaus_Fachlogik();
-            getManager_View();
+            getTagesEinnahmen_View();
+            getWochenEinnahmen_View();
         }
 
 
@@ -181,6 +167,51 @@ public class DemoServlet extends HttpServlet {
         return chart.toString();
     }
 
+    public String showManagerView() {
+
+        TagesEinnahmen_View tag = getTagesEinnahmen_View();
+        WochenEinnahmen_View woche = getWochenEinnahmen_View();
+        MonatsEinnahmen_View monat = getMonatsEinnahmen_View();
+
+        JsonArray values = Json.createArrayBuilder()
+                .add(Json.createArrayBuilder()
+                        .add(String.format("%1.2f",tag.getEinnahmen()))
+                )
+                .add(Json.createArrayBuilder()
+                        .add(String.format("%1.2f",woche.getEinnahmen()))
+                )
+                .add(Json.createArrayBuilder()
+                        .add(String.format("%1.2f",monat.getEinnahmen()))
+                ).build();
+
+        JsonObject data = Json.createObjectBuilder().add( "data",Json.createArrayBuilder()
+                .add(Json.createObjectBuilder()
+                        .add("type","table")
+                        .add("header",Json.createObjectBuilder()
+                                .add("values",Json.createArrayBuilder()
+                                        .add(Json.createArrayBuilder().add("TagesEinnahmen"))
+                                        .add(Json.createArrayBuilder().add("WochenEinnahmen"))
+                                        .add(Json.createArrayBuilder().add("MonatsEinnahmen"))
+
+                                )
+                                .add("align","center")
+                                .add("line", Json.createObjectBuilder().add("width",1).add("color","black"))
+                                .add("fill", Json.createObjectBuilder().add("color","gray"))
+                                .add("font", Json.createObjectBuilder().add("family","Arial").add("size",12).add("color","white"))
+
+                        ).add("cells", Json.createObjectBuilder()
+                                .add("values", values)
+                                .add("align","center")
+                                .add("line",Json.createObjectBuilder().add("color","black").add("width",1))
+                                .add("font",Json.createObjectBuilder().add("family","Arial").add("size",11).add("color", Json.createArrayBuilder().add("black")))
+                        )
+
+                )).build();
+
+        return data.toString();
+
+    }
+
 
 
 
@@ -202,16 +233,42 @@ public class DemoServlet extends HttpServlet {
     }
 
 
-    private Manager_View getManager_View() {
+    private TagesEinnahmen_View getTagesEinnahmen_View() {
         ServletContext application = getApplication();
-        Manager_View manager_view = (Manager_View) application.getAttribute("Manager_View");
-        if (manager_view == null) {
+        TagesEinnahmen_View tagesEinnahmen = (TagesEinnahmen_View) application.getAttribute("TagesEinnahmen");
+        if (tagesEinnahmen == null) {
             Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
-            manager_view = new Manager_View(parkhaus);
-            parkhaus.add(manager_view);
-            getApplication().setAttribute("Manager_View", manager_view);
+            tagesEinnahmen = new TagesEinnahmen_View(parkhaus);
+            parkhaus.add(tagesEinnahmen);
+            getApplication().setAttribute("TagesEinnahmen", tagesEinnahmen);
         }
 
-        return manager_view;
+        return tagesEinnahmen;
+    }
+
+    private WochenEinnahmen_View getWochenEinnahmen_View() {
+        ServletContext application = getApplication();
+        WochenEinnahmen_View wochenEinnahmen = (WochenEinnahmen_View) application.getAttribute("WochenEinnahmen");
+        if (wochenEinnahmen == null) {
+            Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+            wochenEinnahmen = new WochenEinnahmen_View(parkhaus);
+            parkhaus.add(wochenEinnahmen);
+            getApplication().setAttribute("WochenEinnahmen", wochenEinnahmen);
+        }
+
+        return wochenEinnahmen;
+    }
+
+    private MonatsEinnahmen_View getMonatsEinnahmen_View() {
+        ServletContext application = getApplication();
+        MonatsEinnahmen_View monatsEinnahmen = (MonatsEinnahmen_View) application.getAttribute("MonatsEinnahmen");
+        if (monatsEinnahmen == null) {
+            Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+            monatsEinnahmen = new MonatsEinnahmen_View(parkhaus);
+            parkhaus.add(monatsEinnahmen);
+            getApplication().setAttribute("MonatsEinnahmen", monatsEinnahmen);
+        }
+
+        return monatsEinnahmen;
     }
 }

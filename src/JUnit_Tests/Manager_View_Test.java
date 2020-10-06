@@ -17,8 +17,8 @@ class Manager_View_Test {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Timestamp timestamp1 = new Timestamp(1601981027296L);
         LocalDate date = LocalDate.of(0,1,1);
-        System.out.println(timestamp1.toLocalDateTime().toLocalDate().minusDays(1));
-        System.out.println(date);
+        System.out.println(timestamp1.toLocalDateTime().toLocalDate().minusWeeks(1));
+        System.out.println(timestamp1.toLocalDateTime().toLocalDate());
 
 
     }
