@@ -72,26 +72,31 @@ public class DemoServlet extends HttpServlet {
 
 
 
-        if ("cmd".equals(command) && "sum".equals(param)) {
+        if ("cmd".equals(command) && "SummeEinnahmen".equals(param)) {
             double summe = parkhaus.getSummeEinnahmen();
             out.println(String.format("%1.2f",summe));
             System.out.println("sum = " +String.format("%1.2f",summe));
         }
 
-        if ("cmd".equals(command) && "avg".equals(param)) {
-            double avg = parkhaus.getMeanEinnahmen();
-            out.println(String.format("%1.2f",avg));
-            System.out.println("avg = " + String.format("%1.2f",avg));
+        if ("cmd".equals(command) && "AnzahlBesucher".equals(param)) {
+            int anzahl = parkhaus.getAnzahlBesucher();
+            out.println(anzahl);
+            System.out.println("anzahl = "+ anzahl);
         }
 
-        if ("cmd".equals(command) && "avgtimespent".equals(param)) {
-            double avg = parkhaus.getMeanEinnahmen();
-            out.println(String.format("%1.2f",avg));
-            System.out.println("avg = " + String.format("%1.2f",avg));
+        if ("cmd".equals(command) && "MeanEinnahmen".equals(param)) {
+            double mean = parkhaus.getMeanEinnahmen();
+            out.println(String.format("%1.2f",mean));
+            System.out.println("mean = " + String.format("%1.2f",mean));
         }
 
-        if ("cmd".equals(command) && "chart".equals(param)) {
+        if ("cmd".equals(command) && "KostenChart".equals(param)) {
             out.println(this.JsonChart());
+        }
+
+        if ("cmd".equals(command) && "Manager_View".equals(param)) {
+            Manager_View manager_view = getManager_View();
+            out.println(manager_view.showManagerView());
         }
 
         if ("cmd".equals(command) && "config".equals(param)) {
