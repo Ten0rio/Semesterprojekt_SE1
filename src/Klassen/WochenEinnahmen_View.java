@@ -10,6 +10,7 @@ public class WochenEinnahmen_View extends Manager_View {
 
     @Override
     protected void berechneSumme(LocalDate aktuellesDatum, Parkschein last) {
+        // wird die Bedingung erfüllt, ist der in "date" gespeicherte Tag länger als eine Woche her und die Einnahmen müssen zurück gesetzt werden
         if( aktuellesDatum.minusWeeks(1).isAfter(date)){
             date = aktuellesDatum;
             einnahmen = Double.parseDouble(last.getParkgebuehr()) / 100;

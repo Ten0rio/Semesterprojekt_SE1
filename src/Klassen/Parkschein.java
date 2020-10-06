@@ -11,6 +11,8 @@ public class Parkschein  {
 	private String ticketHash;
 	private String farbe;
 	private String parkplatz;
+	private String clientCategorie;
+	private String fahrzeugart;
 
 	public Parkschein(String[] params ){
 		autoNr = params[1];
@@ -20,15 +22,15 @@ public class Parkschein  {
 		ticketHash = params[5];
 		farbe = params[6];
 		parkplatz = params[7];
+		clientCategorie = params[8];
+		fahrzeugart = params[9];
 	}
 
 	public String getAutoNr() {
 		return autoNr;
 	}
 
-	public String getZeitAnfang() {
-		return zeitAnfang;
-	}
+	public String getZeitAnfang() { return zeitAnfang; }
 
 	public String getParkzeit() {
 		return parkzeit;
@@ -42,9 +44,7 @@ public class Parkschein  {
 		return ticketHash;
 	}
 
-	public String getFarbe() {
-		return farbe;
-	}
+	public String getFarbe() { return farbe; }
 
 	public String getParkplatz() {
 		return parkplatz;

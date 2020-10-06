@@ -10,13 +10,9 @@ import java.util.ArrayList;
 
 public class Parkhaus_Fachlogik implements IObservable {
 
-    public Parkhaus_Fachlogik(){
-        for( Parkplatz p  : slots){
-            p = new Parkplatz();
-        }
-    }
+    public Parkhaus_Fachlogik(){}
 
-    Parkplatz[] slots = new Parkplatz[10];
+
     private ArrayList<Parkschein> tickets = new ArrayList<>();
     ArrayList<IObserver> views = new ArrayList<>();
    // private ArrayList<Parkschein> aktuellImParkhaus = new ArrayList<>();
@@ -69,7 +65,7 @@ public class Parkhaus_Fachlogik implements IObservable {
 
 
     //---------------------------------------------------------------------------------------------
-    // Json-Methoden um Charts zu erzeugen
+    // Json-HilfsMethoden um Charts zu erzeugen
     public JsonArray getJsonArrayParkgebuehren() {
         JsonArrayBuilder array = Json.createArrayBuilder();
 

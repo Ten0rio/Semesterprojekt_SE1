@@ -10,6 +10,7 @@ public class TagesEinnahmen_View extends Manager_View {
 
     @Override
     protected void berechneSumme(LocalDate aktuellesDatum, Parkschein last) {
+        // wird die Bedingung erfüllt, ist nicht mehr der in "date" gespeicherte Tag und die Einnahmen müssen zurück gesetzt werden
         if( aktuellesDatum.isAfter(date)){
             date = aktuellesDatum;
             einnahmen = Double.parseDouble(last.getParkgebuehr()) / 100;

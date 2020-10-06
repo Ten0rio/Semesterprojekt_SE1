@@ -1,24 +1,12 @@
 package Servlets;
 
-import javax.json.*;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
-
-import Klassen.Auto;
 
 @WebServlet("/ParkhausServlet")
 public class ParkhausServlet extends HttpServlet {
 
-
+/*
 
 
     @Override
@@ -160,13 +148,13 @@ public class ParkhausServlet extends HttpServlet {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
             out.println(jsonString);
-*/
+
         }
+*/
 
 
 
-
-
+/*
 
 
         if("cmd".equals(command) && "ParkdauerAnParkplatz".equals(param)){
@@ -318,4 +306,7 @@ public class ParkhausServlet extends HttpServlet {
         }
         return autos;
     }
+
+ */
+
 }

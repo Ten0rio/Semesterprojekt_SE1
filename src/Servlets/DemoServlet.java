@@ -89,6 +89,7 @@ public class DemoServlet extends HttpServlet {
             getParkhaus_Fachlogik();
             getTagesEinnahmen_View();
             getWochenEinnahmen_View();
+            getMonatsEinnahmen_View();
         }
 
 
