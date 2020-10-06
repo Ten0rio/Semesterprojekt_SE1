@@ -6,14 +6,21 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Manager_View implements IObserver {
 
     public Manager_View(Parkhaus_Fachlogik parkhaus) {
         this.parkhaus = parkhaus;
+        tag = woche = LocalDate.of(0,1,1);
+        update();
     }
 
-    Parkhaus_Fachlogik parkhaus;
+    private Parkhaus_Fachlogik parkhaus;
+    private LocalDate tag;
+    private LocalDate woche;
     private double tagesEinnahmen;
     private double wochenEinnahmen;
 
@@ -25,19 +32,41 @@ public class Manager_View implements IObserver {
         return wochenEinnahmen;
     }
 
+    //----------------------------------------------------------------------------------------------
+
     @Override
     public void update() {
-        tagesEinnahmen = parkhaus.getSummeEinnahmen();
+        ArrayList<Parkschein> tickets = parkhaus.getTickets();
+        Parkschein last = tickets.get(tickets.size()-1);
+        LocalDate aktuellesDatum = new Timestamp( Long.parseLong( last.getZeitAnfang() ) ).toLocalDateTime().toLocalDate();
+
+        if( aktuellesDatum.isAfter(tag)){
+            tag = aktuellesDatum;
+            tagesEinnahmen = Double.parseDouble(last.getParkgebuehr()) / 100;
+        }else {
+            tagesEinnahmen += Double.parseDouble(last.getParkgebuehr()) /100;
+        }
+
+        if( aktuellesDatum.minusWeeks(1).isAfter(woche)){
+            woche = aktuellesDatum;
+            wochenEinnahmen = Double.parseDouble(last.getParkgebuehr()) / 100;
+        }else {
+            wochenEinnahmen += Double.parseDouble(last.getParkgebuehr()) /100;
+        }
+
+
     }
 
+    //----------------------------------------------------------------------------------------------
+
    public String showManagerView() {
-        System.out.println("Tageseinnahmen: "+ tagesEinnahmen);
+
         JsonArray values = Json.createArrayBuilder()
                         .add(Json.createArrayBuilder()
                                 .add(String.format("%1.2f",getTagesEinnahmen()))
                         )
                         .add(Json.createArrayBuilder()
-                                .add(getWochenEinnahmen())
+                                .add(String.format("%1.2f",getWochenEinnahmen()))
                         ).build();
 
         JsonObject data = Json.createObjectBuilder().add( "data",Json.createArrayBuilder()
@@ -45,8 +74,8 @@ public class Manager_View implements IObserver {
                         .add("type","table")
                         .add("header",Json.createObjectBuilder()
                                 .add("values",Json.createArrayBuilder()
-                                        .add(Json.createArrayBuilder().add("<b>TagesEinnahmen</b>"))
-                                        .add(Json.createArrayBuilder().add("<b>WochenEinnahmen</b>"))
+                                        .add(Json.createArrayBuilder().add("TagesEinnahmen"))
+                                        .add(Json.createArrayBuilder().add("WochenEinnahmen"))
 
                                 )
                                 .add("align","center")
