@@ -18,7 +18,7 @@ public class ParkscheinerstellenCommand implements ICommand {
 
     @Override
     public void undo() {
-        this.parkhaus.removeParkschein(ticket);
+        this.parkhaus.removeParkschein();
 
     }
 }
