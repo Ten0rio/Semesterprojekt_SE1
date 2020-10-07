@@ -65,7 +65,7 @@ class Manager_View_Test {
     void updatemehr(){
         parkhaus_fachlogik.addParkschein(new String[]{"1","2","3","4","500"});
         parkhaus_fachlogik.addParkschein(new String[]{"1","2","3","4","200"});
-        parkhaus_fachlogik.removeParkschein(new String[]{"1","2","3","4","200"});
+        parkhaus_fachlogik.removeParkschein();
         assertEquals(5,manager_view.getEinnahmen());
     }
 }
