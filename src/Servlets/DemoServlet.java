@@ -180,7 +180,7 @@ public class DemoServlet extends HttpServlet {
         return chart.toString();
     }
 
-    public String showManagerView() {
+    private String showManagerView() {
 
         TagesEinnahmen_View tag = getTagesEinnahmen_View();
         WochenEinnahmen_View woche = getWochenEinnahmen_View();
