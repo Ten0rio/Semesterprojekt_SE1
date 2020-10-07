@@ -15,7 +15,6 @@ public class Parkhaus_Fachlogik implements IObservable {
 
     private ArrayList<Parkschein> tickets = new ArrayList<>();
     ArrayList<IObserver> views = new ArrayList<>();
-   // private ArrayList<Parkschein> aktuellImParkhaus = new ArrayList<>();
 
     private int anzahlBesucher = 0;
     private double summeEinnahmen = 0;
@@ -76,14 +75,6 @@ public class Parkhaus_Fachlogik implements IObservable {
         } catch( IndexOutOfBoundsException e){ notifyObservers();}
     }
 
- /*   public void addImParkhaus(String[] params){
-        aktuellImParkhaus.add(new Parkschein(params));
-    }
-
-    // pop Parkschein bei cmd == occupied um Autos die nicht ins Parkhaus eingefahren sind auch nicht zu speichern
-    public void popImParkhaus(){
-        aktuellImParkhaus.remove(aktuellImParkhaus.size()-1);
-    }*/
 
 
 
