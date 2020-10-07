@@ -25,9 +25,19 @@ public class Parkhaus_Fachlogik implements IObservable {
         anzahlBesucher += 1;
     }
 
+    public void DecAnzahlBesucher() {anzahlBesucher -= 1;}
+
     public void sumEinnahmen(int price) {
         // in Euro
         summeEinnahmen += (price/100.0);
+    }
+
+    public void updateSumEinnahmen(int price) {
+        // in Euro
+        summeEinnahmen -= (price/100.0);
+        if (summeEinnahmen < 0){
+            summeEinnahmen = 0;
+        }
     }
 
     public double getSummeEinnahmen() {
@@ -35,6 +45,9 @@ public class Parkhaus_Fachlogik implements IObservable {
     }
 
     public double getMeanEinnahmen() {
+        if (Double.isNaN(summeEinnahmen/anzahlBesucher) || Double.isInfinite(summeEinnahmen/anzahlBesucher)){
+            return 0;
+        }
         return  (summeEinnahmen/anzahlBesucher);
     }
 
@@ -53,6 +66,13 @@ public class Parkhaus_Fachlogik implements IObservable {
         notifyObservers();
     }
 
+    public void removeParkschein(String[] params){
+        tickets.remove(tickets.size()-1);
+        DecAnzahlBesucher();
+        updateSumEinnahmen(Integer.parseInt(params[4]));
+        notifyObservers();
+    }
+
  /*   public void addImParkhaus(String[] params){
         aktuellImParkhaus.add(new Parkschein(params));
     }
@@ -66,6 +86,7 @@ public class Parkhaus_Fachlogik implements IObservable {
 
     //---------------------------------------------------------------------------------------------
     // Json-HilfsMethoden um Charts zu erzeugen
+
     public JsonArray getJsonArrayParkgebuehren() {
         JsonArrayBuilder array = Json.createArrayBuilder();
 

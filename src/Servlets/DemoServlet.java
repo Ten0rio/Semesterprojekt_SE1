@@ -1,5 +1,6 @@
 package Servlets;
 
+import Interfaces.ICommand;
 import Klassen.*;
 
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -32,6 +34,7 @@ public class DemoServlet extends HttpServlet {
         String event = params[0];
 
         Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+        CommandStack commands = getCommandStack();
 
         if ("enter".equals(event)) {
 
@@ -39,7 +42,15 @@ public class DemoServlet extends HttpServlet {
 
         if ("leave".equals(event)) {
 
-            parkhaus.addParkschein(params);
+            //--------------ICommand Entkapselung von erstellen und speichern----------------
+            Parkscheinersteller ticket = new Parkscheinersteller();
+            ICommand ticketplus = new ParkscheinerstellenCommand(parkhaus,params);
+
+            ticket.saveCommand(ticketplus);
+            ticket.activate();
+            commands.addCommand(ticketplus);
+
+            //parkhaus.addParkschein(params);
 
             getApplication().setAttribute("Parkhaus", parkhaus);
         }
@@ -52,13 +63,17 @@ public class DemoServlet extends HttpServlet {
         String param = request.getParameter("cmd");
 
         Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+        CommandStack commands = getCommandStack();
 
         PrintWriter out = response.getWriter();
         response.setContentType("text/html");
 
+//--------------Entferne des letzten Commandos(letztes hinzugefügtes Auto)----------------
+        if ("cmd".equals(command) && "UndoLastCar".equals(param)){
+            commands.removeCommand().undo();
+        }
 
-
-        if ("cmd".equals(command) && "SummeEinnahmen".equals(param)) {
+            if ("cmd".equals(command) && "SummeEinnahmen".equals(param)) {
             double summe = parkhaus.getSummeEinnahmen();
             out.println(String.format("%1.2f",summe));
             System.out.println("sum = " +String.format("%1.2f",summe));
@@ -271,5 +286,16 @@ public class DemoServlet extends HttpServlet {
         }
 
         return monatsEinnahmen;
+    }
+
+    private CommandStack getCommandStack() {
+        ServletContext application = getApplication();
+        CommandStack commands = (CommandStack) application.getAttribute("Commands");
+        if (commands == null) {
+            commands = new CommandStack();
+            getApplication().setAttribute("Commands", commands);
+        }
+
+        return commands;
     }
 }
