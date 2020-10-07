@@ -37,10 +37,12 @@ class Manager_View_Test {
 
     Parkhaus_Fachlogik parkhaus_fachlogik;
     Manager_View manager_view;
+
     @BeforeEach
     void setup(){
         parkhaus_fachlogik = new Parkhaus_Fachlogik();
         manager_view = new WochenEinnahmen_View(parkhaus_fachlogik);
+        parkhaus_fachlogik.add(manager_view);
     }
 
 
@@ -56,8 +58,14 @@ class Manager_View_Test {
     @DisplayName("Werte höher 0")
     void update(){
         parkhaus_fachlogik.addParkschein(new String[]{"1","2","3","4","500"});
-        manager_view.update();
         assertEquals(5,manager_view.getEinnahmen());
     }
-
+    @Test
+    @DisplayName("Werte höher 5")
+    void updatemehr(){
+        parkhaus_fachlogik.addParkschein(new String[]{"1","2","3","4","500"});
+        parkhaus_fachlogik.addParkschein(new String[]{"1","2","3","4","200"});
+        parkhaus_fachlogik.removeParkschein();
+        assertEquals(8,manager_view.getEinnahmen());
+    }
 }
