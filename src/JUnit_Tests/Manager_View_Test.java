@@ -1,10 +1,12 @@
 package JUnit_Tests;
 
+import Klassen.Parkschein;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +21,12 @@ class Manager_View_Test {
         LocalDate date = LocalDate.of(0,1,1);
         System.out.println(timestamp1.toLocalDateTime().toLocalDate().minusWeeks(1));
         System.out.println(timestamp1.toLocalDateTime().toLocalDate());
+
+        ArrayList<Parkschein> tickets = new ArrayList<>();
+        tickets. add(new Parkschein(new String[]{"hallo","123","123" }));
+        Parkschein p = tickets.remove(tickets.size()-1);
+        System.out.println(p.getAutoNr() + "   " + p.getClientCategorie());
+
 
 
     }

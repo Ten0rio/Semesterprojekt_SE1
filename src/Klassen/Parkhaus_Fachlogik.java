@@ -66,11 +66,14 @@ public class Parkhaus_Fachlogik implements IObservable {
         notifyObservers();
     }
 
-    public void removeParkschein(String[] params){
-        tickets.remove(tickets.size()-1);
-        DecAnzahlBesucher();
-        updateSumEinnahmen(Integer.parseInt(params[4]));
-        notifyObservers();
+    public void removeParkschein(String[] params) throws IndexOutOfBoundsException {
+        try {
+            Parkschein last = tickets.remove(tickets.size() - 1);
+            tickets.get(tickets.size()-1).setParkzeitVorgänger(last.getParkzeitVorgänger());
+            DecAnzahlBesucher();
+            updateSumEinnahmen(Integer.parseInt(params[4]));
+            notifyObservers();
+        } catch( IndexOutOfBoundsException e){}
     }
 
  /*   public void addImParkhaus(String[] params){

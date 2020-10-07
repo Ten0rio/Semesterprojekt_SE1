@@ -15,7 +15,13 @@ public class MonatsEinnahmen_View extends Manager_View {
             date = aktuellesDatum;
             einnahmen = Double.parseDouble(last.getParkgebuehr()) / 100;
         }else {
-            einnahmen += Double.parseDouble(last.getParkgebuehr()) /100;
+            double parkzeitVorgaenger = Double.parseDouble(last.getParkzeitVorgänger()) / 100;
+            if(0 < parkzeitVorgaenger){
+                einnahmen -= parkzeitVorgaenger;
+            } else {
+                einnahmen += Double.parseDouble(last.getParkgebuehr()) /100;
+            }
+
         }
     }
 }

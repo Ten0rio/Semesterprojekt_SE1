@@ -14,16 +14,23 @@ public class Parkschein  {
 	private String clientCategorie;
 	private String fahrzeugart;
 
-	public Parkschein(String[] params ){
-		autoNr = params[1];
-		zeitAnfang = params[2];
-		parkzeit = params[3];
-		parkgebuehr = params[4];
-		ticketHash = params[5];
-		farbe = params[6];
-		parkplatz = params[7];
-		clientCategorie = params[8];
-		fahrzeugart = params[9];
+	private String parkzeitVorgänger;
+
+	public Parkschein(String[] params ) throws IndexOutOfBoundsException{
+
+		try {
+			parkzeitVorgänger = "0";
+
+			autoNr = params[1];
+			zeitAnfang = params[2];
+			parkzeit = params[3];
+			parkgebuehr = params[4];
+			ticketHash = params[5];
+			farbe = params[6];
+			parkplatz = params[7];
+			clientCategorie = params[8];
+			fahrzeugart = params[9];
+		} catch (IndexOutOfBoundsException e){}
 	}
 
 	public String getAutoNr() {
@@ -49,4 +56,12 @@ public class Parkschein  {
 	public String getParkplatz() {
 		return parkplatz;
 	}
+
+	public String getClientCategorie() { return clientCategorie; }
+
+	public String getFahrzeugart() { return fahrzeugart; }
+
+	public String getParkzeitVorgänger() { return parkzeitVorgänger; }
+
+	public void setParkzeitVorgänger(String parkzeitVorgänger) { this.parkzeitVorgänger = parkzeitVorgänger; }
 }
