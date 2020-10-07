@@ -1,5 +1,6 @@
 package JUnit_Tests;
 
+import Klassen.Parkhaus_Fachlogik;
 import Klassen.Parkschein;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ class Manager_View_Test {
     @BeforeEach
     void setUp() {
 
+        Parkhaus_Fachlogik parkhaus = new Parkhaus_Fachlogik();
+
+
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Timestamp timestamp1 = new Timestamp(1601981027296L);
         LocalDate date = LocalDate.of(0,1,1);
@@ -31,20 +35,11 @@ class Manager_View_Test {
 
     }
 
-    @Test
-    void getTagesEinnahmen() {
-    }
-
-    @Test
-    void getWochenEinnahmen() {
-    }
 
     @Test
     void update() {
-    }
-
-    @Test
-    void showManagerView() {
 
     }
+
+
 }

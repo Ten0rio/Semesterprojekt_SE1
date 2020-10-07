@@ -27,18 +27,36 @@ public abstract class Manager_View implements IObserver {
     @Override
     final public void update() {
         ArrayList<Parkschein> tickets = parkhaus.getTickets();
-        // letzter hinzugefügter Parkschein => der für update() relevante Parkschein
-        Parkschein last = tickets.get(tickets.size()-1);
-        // Erstelldatum des Parkscheins
-        LocalDate aktuellesDatum = new Timestamp( Long.parseLong( last.getZeitAnfang() ) ).toLocalDateTime().toLocalDate();
 
-        // Aufruf Template Methode
-        berechneSumme(aktuellesDatum,last);
+        try{
+            // letzter hinzugefügter Parkschein => der für update() relevante Parkschein
+            Parkschein last = tickets.get(tickets.size()-1);
 
+
+            // Erstelldatum des Parkscheins
+            LocalDate aktuellesDatum = new Timestamp( Long.parseLong( last.getZeitAnfang() ) ).toLocalDateTime().toLocalDate();
+
+            // Aufruf Template Methode
+            // wird die Bedingung erfüllt, ist der in "date" gespeicherte Tag länger als eine/n Tag,Woche,Monat her und die Einnahmen müssen zurück gesetzt werden
+            if( datePassed(aktuellesDatum) ){
+                date = aktuellesDatum;
+                einnahmen = Double.parseDouble(last.getParkgebuehr()) / 100;
+            }else {
+                double parkzeitVorgaenger = Double.parseDouble(last.getParkgebuehrVorgänger()) / 100;
+                if( parkzeitVorgaenger > 0 ){
+                    einnahmen -= parkzeitVorgaenger;
+                } else {
+                    einnahmen += Double.parseDouble(last.getParkgebuehr()) /100;
+                }
+
+            }
+
+
+        } catch ( IndexOutOfBoundsException e){ einnahmen = 0; }
     }
 
     // Template Methode
-    protected abstract void berechneSumme(LocalDate aktuellesDatum, Parkschein last );
+    protected abstract boolean datePassed(LocalDate aktuellesDatum );
 
     //----------------------------------------------------------------------------------------------
 

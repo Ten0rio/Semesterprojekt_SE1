@@ -14,12 +14,12 @@ public class Parkschein  {
 	private String clientCategorie;
 	private String fahrzeugart;
 
-	private String parkzeitVorgänger;
+	private String parkGebuehrVorgänger;
 
 	public Parkschein(String[] params ) throws IndexOutOfBoundsException{
 
 		try {
-			parkzeitVorgänger = "0";
+			parkGebuehrVorgänger = "0";
 
 			autoNr = params[1];
 			zeitAnfang = params[2];
@@ -61,7 +61,7 @@ public class Parkschein  {
 
 	public String getFahrzeugart() { return fahrzeugart; }
 
-	public String getParkzeitVorgänger() { return parkzeitVorgänger; }
+	public String getParkgebuehrVorgänger() { return parkGebuehrVorgänger; }
 
-	public void setParkzeitVorgänger(String parkzeitVorgänger) { this.parkzeitVorgänger = parkzeitVorgänger; }
+	public void setParkgebuehrVorgänger(String parkGebuehrVorgänger) { this.parkGebuehrVorgänger = parkGebuehrVorgänger; }
 }
