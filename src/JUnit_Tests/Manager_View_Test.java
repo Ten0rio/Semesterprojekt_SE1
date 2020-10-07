@@ -2,17 +2,12 @@ package JUnit_Tests;
 
 import Klassen.Manager_View;
 import Klassen.Parkhaus_Fachlogik;
-import Klassen.Parkschein;
 import Klassen.WochenEinnahmen_View;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 

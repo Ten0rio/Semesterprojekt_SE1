@@ -1,7 +1,6 @@
 package Klassen;
 
 import Interfaces.IObserver;
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
