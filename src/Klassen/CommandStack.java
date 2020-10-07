@@ -1,20 +1,29 @@
 package Klassen;
 
 import Interfaces.ICommand;
+
+import java.util.EmptyStackException;
 import java.util.Stack;
 
-public class CommandStack{
+public class CommandStack {
 
-    public CommandStack(){}
+    public CommandStack() {
+    }
 
     private Stack<ICommand> commands = new Stack<>();
 
-    public void addCommand(ICommand command){
+    public void addCommand(ICommand command) {
         commands.push(command);
     }
 
-    public ICommand removeCommand(){
-        return commands.pop();
+    public ICommand removeCommand() {
+
+        try {
+            return commands.pop();
+        } catch (EmptyStackException e) {
+            return null;
+        }
+
     }
 
 }
