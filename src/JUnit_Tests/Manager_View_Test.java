@@ -68,4 +68,12 @@ class Manager_View_Test {
         parkhaus_fachlogik.removeParkschein();
         assertEquals(5,manager_view.getEinnahmen());
     }
+
+    @Test
+    @DisplayName("Update mit remove auf 0")
+    void udatetozero() {
+        parkhaus_fachlogik.addParkschein(new String[]{"1","2","3","4","500"});
+        parkhaus_fachlogik.removeParkschein();
+        assertEquals(0,manager_view.getEinnahmen());
+    }
 }
