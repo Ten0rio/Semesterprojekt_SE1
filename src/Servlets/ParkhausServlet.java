@@ -1,183 +1,129 @@
 package Servlets;
 
+import Interfaces.ICommand;
+import Klassen.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/ParkhausServlet")
+@WebServlet({"/ParkhausServlet"})
 public class ParkhausServlet extends HttpServlet {
 
-/*
+    public ParkhausServlet() {}
 
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String body = getBody(request);
         System.out.println(body);
         String[] params = body.split(",");
         String event = params[0];
 
-
+        Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+        CommandStack commands = getCommandStack();
 
         if ("enter".equals(event)) {
-            Integer total = getPersistentTotalCars();
-            total += 1;
-            getApplication().setAttribute("total", total);
 
         }
-
-
-
 
         if ("leave".equals(event)) {
-            Float sum = getPersistentSum(); // Summe sum = getsum();
-            String priceString = params[4];
-            if (!"_".equals(priceString)) {
-                float price = Float.parseFloat(priceString);
-                sum += price;
-                getApplication().setAttribute("sum", sum);
-            }
 
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(sum);
+            //--------------ICommand Entkapselung von erstellen und speichern----------------
+            Parkscheinersteller ticket = new Parkscheinersteller();
+            ICommand ticketplus = new ParkscheinerstellenCommand(parkhaus,params);
 
-            int total = getPersistentTotalCars();
-            getApplication().setAttribute("avg", sum / total);
+            ticket.saveCommand(ticketplus);
+            ticket.activate();
+            commands.addCommand(ticketplus);
 
-            Float avgtime = getPersistentAvgTimeSpent();
-            String timeString = params[3];
-            if (!"_".equals(timeString)) {
-                float time = Float.parseFloat(timeString);
-                avgtime += time;
-                getApplication().setAttribute("avgtime", avgtime / total);
-            }
+            //parkhaus.addParkschein(params);
 
-
-            ArrayList<Auto> allcars = autos();
-            allcars.add(new Auto(params[1],params[7],params[3]));
-            //System.out.println(allcars.size());
-            getApplication().setAttribute("autos", allcars);
-
+            getApplication().setAttribute("Parkhaus", parkhaus);
         }
-
-        //#######################################################################################################################
-        //#######################################################################################################################
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String[] requestParamString = request.getQueryString().split("=");
         String command = requestParamString[0];
-        //String param = requestParamString[1];
         String param = request.getParameter("cmd");
 
+        Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+        CommandStack commands = getCommandStack();
 
+        PrintWriter out = response.getWriter();
+        response.setContentType("text/html");
 
+//--------------Entferne des letzten Commandos(letztes hinzugefügtes Auto)----------------
+        if ("cmd".equals(command) && "UndoLastCar".equals(param)){
+            commands.removeCommand().undo();
+        }
 
+        if ("cmd".equals(command) && "SummeEinnahmen".equals(param)) {
+            double summe = parkhaus.getSummeEinnahmen();
+            out.println(String.format("%1.2f",summe));
+            System.out.println("sum = " +String.format("%1.2f",summe));
+        }
 
-        if ("cmd".equals(command) && "sum".equals(param)) {
-            Float sum = getPersistentSum();
+        if ("cmd".equals(command) && "AnzahlBesucher".equals(param)) {
+            int anzahl = parkhaus.getAnzahlBesucher();
+            out.println(anzahl);
+            System.out.println("anzahl = "+ anzahl);
+        }
 
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(sum / 100);
+        if ("cmd".equals(command) && "MeanEinnahmen".equals(param)) {
+            double mean = parkhaus.getMeanEinnahmen();
+            out.println(String.format("%1.2f",mean));
+            System.out.println("mean = " + String.format("%1.2f",mean));
+        }
 
-            System.out.println("sum = " + sum);
+        if ("cmd".equals(command) && "KostenChart".equals(param)) {
+            out.println(this.JsonChart());
+        }
+
+        if ("cmd".equals(command) && "Manager_View".equals(param)) {
+            out.println(showManagerView());
+        }
+
+        if ("cmd".equals(command) && "config".equals(param)) {
+            // create Objects in Servlet Context
+            getParkhaus_Fachlogik();
+            getTagesEinnahmen_View();
+            getWochenEinnahmen_View();
+            getMonatsEinnahmen_View();
         }
 
 
 
+        if ("cmd".equals(command) && "ParkdauerAnParkplatz".equals(param)) {
+            ArrayList<Parkschein> tickets = parkhaus.getTickets();
+            double parkzeit = (Double)tickets.stream().filter((a) -> {
+                return a.getParkplatz().equals("1");
+            }).map((a) -> {
+                return Double.parseDouble(a.getParkzeit());
+            }).reduce(0.0D, (x, y) -> {
+                return x + y;
+            });
 
-        if ("cmd".equals(command) && "avg".equals(param)) {
-            Float avg = getPersistentAvg();
-
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(avg / 100);
-
-            System.out.println("avg = " + avg);
+            out.println("Die gesamte Parkzeit auf Parkplatz 1 betraegt: " + String.format("%1.2f",parkzeit / 1000.0) + "s");
         }
-
-
-
-
-
-        if ("cmd".equals(command) && "avgtimespent".equals(param)) {
-            Float avgtime = getPersistentAvg();
-
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(avgtime / 100);
-
-            System.out.println("avgtime = " + avgtime);
-        }
-
-
-
-
-
-        if("cmd".equals(command) && "chart".equals(param)){
-
-
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(JsonChart());
-
-/*
-            ArrayList<Auto> listeAllerAutos = autos();
-            String jsonString = "{" + " \"data\": [" + " {" + " \"x\": [";
-
-
-            Auto car;
-            for(int i= 0; i < listeAllerAutos.size()-1; i++){
-                car = listeAllerAutos.get(i);
-                jsonString += "\""+  car.getNumber()  + "\","; //die nummern der Autos werden in Strings fuer die x-werte transformiert
-            }
-            car = listeAllerAutos.get(listeAllerAutos.size()-1);
-            jsonString += "\""+ car.getNumber() + "\"" + " ]," +  " \"y\": [" ; //Beim letzten element das Komma weglassen
-            //------------------------
-
-
-            for(int i= 0; i < listeAllerAutos.size()-1; i++){
-                jsonString +=   listeAllerAutos.get(i).getParkzeit()  + ","; //die Parkzeiten der Autos werden in Strings fuer die y-werte transformiert
-            }
-            jsonString +=  listeAllerAutos.get(listeAllerAutos.size()-1).getParkzeit() +  " ]," + " \"type\": \"bar\"" + " }" + " ]" + "}"; //Beim letzten element das Komma weglassen
-
-            System.out.println(jsonString);
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println(jsonString);
-
-        }
-*/
-
-
-
-/*
-
-
-        if("cmd".equals(command) && "ParkdauerAnParkplatz".equals(param)){
-
-            ArrayList<Auto> listeAllerAutos = autos();
-            double parkzeit = listeAllerAutos.stream()
-                    .filter( a -> a.getParkplatz().equals("1") )
-                    .map( a -> Double.parseDouble(a.getParkzeit()))
-                    .reduce(0.0, (x,y) -> x+y );
-
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            out.println("Die gesamte Parkzeit auf Parkplatz 1 betraegt: " + parkzeit/ 1000 + "s");
-        }
-
-
-
 
         System.out.println(request.getQueryString());
-
     }
 
 
+    //---------------------------------------------------------------------------------------------------------
 
     private static String getBody(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -188,8 +134,10 @@ public class ParkhausServlet extends HttpServlet {
             if (inputStream != null) {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 char[] charbuffer = new char[128];
-                int bytesread = -1;
-                while ((bytesread = bufferedReader.read(charbuffer)) > 0) {
+                boolean var5 = true;
+
+                int bytesread;
+                while((bytesread = bufferedReader.read(charbuffer)) > 0) {
                     stringBuilder.append(charbuffer, 0, bytesread);
                 }
             } else {
@@ -199,114 +147,152 @@ public class ParkhausServlet extends HttpServlet {
             if (bufferedReader != null) {
                 bufferedReader.close();
             }
+
         }
+
         return stringBuilder.toString();
     }
 
-
-
-
+    //-----------------------------------------------------------------------
 
     private ServletContext getApplication() {
-        return getServletConfig().getServletContext();
+        return this.getServletConfig().getServletContext();
     }
 
 
-
-
-
-    private Float getPersistentSum() {
-        Float sum;
-        ServletContext application = getApplication();
-        sum = (Float) application.getAttribute("sum");
-        if (sum == null) sum = 0.0f;
-        return sum;
-    }
+    //------------------------------------------------------------------------
 
 
 
 
-
-    private Float getPersistentAvg() {
-        Float avg;
-        ServletContext application = getApplication();
-        avg = (Float) application.getAttribute("avg");
-        if (avg == null) avg = 0.0f;
-        return avg;
-    }
-
-
-
-
-    private Integer getPersistentTotalCars() {
-        Integer total;
-        ServletContext application = getApplication();
-        total = (Integer) application.getAttribute("total");
-        if (total == null) total = 0;
-        return total;
-    }
-
-
-
-
-    private Float getPersistentAvgTimeSpent() {
-        Float avgtime;
-        ServletContext application = getApplication();
-        avgtime = (Float) application.getAttribute("avgtime");
-        if (avgtime == null) avgtime = 0.0f;
-        return avgtime;
-    }
-
-
-
-     private String JsonChart(){
-
-
+    private String JsonChart() {
+        Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
         JsonObject chart = Json.createObjectBuilder()
-            .add("data", Json.createArrayBuilder()
-                .add( Json.createObjectBuilder()
-                        .add("x",getJsonArrayNumber())
-                        .add("y", getJsonArrayParkzeit())
-                        .add("type", "bar"))).build();
-
+                .add("data", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                                .add("x", parkhaus.getJsonArrayNumber())
+                                .add("y", parkhaus.getJsonArrayParkgebuehren())
+                                .add("type", "bar")
+                                .add("name","Gebuehren in Euro")
+                        )
+                )
+                .build();
         return chart.toString();
-
-    }
-     //z.B. : { "data": [ { "x": ["1","2","3","4","7","5","8","10" ], "y": [400,398,199,800,400,1200,401,199 ], "type": "bar" } ]}
-
-    private JsonArray getJsonArrayNumber() {
-
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        for (Auto i : autos()) {
-            array.add(i.getNumber());
-
-        }
-        return  array.build();
     }
 
-    private JsonArray getJsonArrayParkzeit() {
+    private String showManagerView() {
 
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        for (Auto i : autos()) {
-            array.add(i.getParkzeit());
-        }
-        return  array.build();
+        TagesEinnahmen_View tag = getTagesEinnahmen_View();
+        WochenEinnahmen_View woche = getWochenEinnahmen_View();
+        MonatsEinnahmen_View monat = getMonatsEinnahmen_View();
+
+        JsonArray values = Json.createArrayBuilder()
+                .add(Json.createArrayBuilder()
+                        .add(String.format("%1.2f",tag.getEinnahmen()))
+                )
+                .add(Json.createArrayBuilder()
+                        .add(String.format("%1.2f",woche.getEinnahmen()))
+                )
+                .add(Json.createArrayBuilder()
+                        .add(String.format("%1.2f",monat.getEinnahmen()))
+                ).build();
+
+        JsonObject data = Json.createObjectBuilder().add( "data",Json.createArrayBuilder()
+                .add(Json.createObjectBuilder()
+                        .add("type","table")
+                        .add("header",Json.createObjectBuilder()
+                                .add("values",Json.createArrayBuilder()
+                                        .add(Json.createArrayBuilder().add("TagesEinnahmen"))
+                                        .add(Json.createArrayBuilder().add("WochenEinnahmen"))
+                                        .add(Json.createArrayBuilder().add("MonatsEinnahmen"))
+
+                                )
+                                .add("align","center")
+                                .add("line", Json.createObjectBuilder().add("width",1).add("color","black"))
+                                .add("fill", Json.createObjectBuilder().add("color","gray"))
+                                .add("font", Json.createObjectBuilder().add("family","Arial").add("size",12).add("color","white"))
+
+                        ).add("cells", Json.createObjectBuilder()
+                                .add("values", values)
+                                .add("align","center")
+                                .add("line",Json.createObjectBuilder().add("color","black").add("width",1))
+                                .add("font",Json.createObjectBuilder().add("family","Arial").add("size",11).add("color", Json.createArrayBuilder().add("black")))
+                        )
+
+                )).build();
+
+        return data.toString();
+
     }
 
 
 
 
 
-    private ArrayList<Auto> autos() {
+
+
+    //--------------------------------------------------------------------------------------------
+
+
+    private Parkhaus_Fachlogik getParkhaus_Fachlogik() {
         ServletContext application = getApplication();
-        ArrayList<Auto> autos = (ArrayList<Auto>) application.getAttribute("autos");
-        if (autos == null) {
-            autos = new ArrayList<Auto>() ;{
-            }
+        Parkhaus_Fachlogik parkhaus = (Parkhaus_Fachlogik) application.getAttribute("Parkhaus");
+        if (parkhaus == null) {
+            parkhaus = new Parkhaus_Fachlogik();
+            getApplication().setAttribute("Parkhaus", parkhaus);
         }
-        return autos;
+
+        return parkhaus;
     }
 
- */
 
+    private TagesEinnahmen_View getTagesEinnahmen_View() {
+        ServletContext application = getApplication();
+        TagesEinnahmen_View tagesEinnahmen = (TagesEinnahmen_View) application.getAttribute("TagesEinnahmen");
+        if (tagesEinnahmen == null) {
+            Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+            tagesEinnahmen = new TagesEinnahmen_View(parkhaus);
+            parkhaus.add(tagesEinnahmen);
+            getApplication().setAttribute("TagesEinnahmen", tagesEinnahmen);
+        }
+
+        return tagesEinnahmen;
+    }
+
+    private WochenEinnahmen_View getWochenEinnahmen_View() {
+        ServletContext application = getApplication();
+        WochenEinnahmen_View wochenEinnahmen = (WochenEinnahmen_View) application.getAttribute("WochenEinnahmen");
+        if (wochenEinnahmen == null) {
+            Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+            wochenEinnahmen = new WochenEinnahmen_View(parkhaus);
+            parkhaus.add(wochenEinnahmen);
+            getApplication().setAttribute("WochenEinnahmen", wochenEinnahmen);
+        }
+
+        return wochenEinnahmen;
+    }
+
+    private MonatsEinnahmen_View getMonatsEinnahmen_View() {
+        ServletContext application = getApplication();
+        MonatsEinnahmen_View monatsEinnahmen = (MonatsEinnahmen_View) application.getAttribute("MonatsEinnahmen");
+        if (monatsEinnahmen == null) {
+            Parkhaus_Fachlogik parkhaus = getParkhaus_Fachlogik();
+            monatsEinnahmen = new MonatsEinnahmen_View(parkhaus);
+            parkhaus.add(monatsEinnahmen);
+            getApplication().setAttribute("MonatsEinnahmen", monatsEinnahmen);
+        }
+
+        return monatsEinnahmen;
+    }
+
+    private CommandStack getCommandStack() {
+        ServletContext application = getApplication();
+        CommandStack commands = (CommandStack) application.getAttribute("Commands");
+        if (commands == null) {
+            commands = new CommandStack();
+            getApplication().setAttribute("Commands", commands);
+        }
+
+        return commands;
+    }
 }
