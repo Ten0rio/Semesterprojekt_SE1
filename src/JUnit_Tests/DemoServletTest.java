@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DemoServletTest {
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
     }
 

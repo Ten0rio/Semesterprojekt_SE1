@@ -9,7 +9,7 @@ public class MonatsEinnahmen_View extends Manager_View {
     }
 
     @Override
-    protected boolean datePassed(LocalDate aktuellesDatum ) {
+    protected boolean datePassed(LocalDate aktuellesDatum) {
         return aktuellesDatum.minusMonths(1).isAfter(date);
     }
 }

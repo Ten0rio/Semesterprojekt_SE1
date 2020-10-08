@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 public class Parkhaus_Fachlogik implements IObservable {
 
-    public Parkhaus_Fachlogik(){}
+    public Parkhaus_Fachlogik() {
+    }
 
 
     private ArrayList<Parkschein> tickets = new ArrayList<>();
@@ -24,17 +25,19 @@ public class Parkhaus_Fachlogik implements IObservable {
         anzahlBesucher += 1;
     }
 
-    public void DecAnzahlBesucher() {anzahlBesucher -= 1;}
+    public void DecAnzahlBesucher() {
+        anzahlBesucher -= 1;
+    }
 
     public void sumEinnahmen(int price) {
         // in Euro
-        summeEinnahmen += (price/100.0);
+        summeEinnahmen += (price / 100.0);
     }
 
     public void updateSumEinnahmen(int price) {
         // in Euro
-        summeEinnahmen -= (price/100.0);
-        if (summeEinnahmen < 0){
+        summeEinnahmen -= (price / 100.0);
+        if (summeEinnahmen < 0) {
             summeEinnahmen = 0;
         }
     }
@@ -44,10 +47,10 @@ public class Parkhaus_Fachlogik implements IObservable {
     }
 
     public double getMeanEinnahmen() {
-        if (Double.isNaN(summeEinnahmen/anzahlBesucher) || Double.isInfinite(summeEinnahmen/anzahlBesucher)){
+        if (Double.isNaN(summeEinnahmen / anzahlBesucher) || Double.isInfinite(summeEinnahmen / anzahlBesucher)) {
             return 0;
         }
-        return  (summeEinnahmen/anzahlBesucher);
+        return (summeEinnahmen / anzahlBesucher);
     }
 
     public int getAnzahlBesucher() {
@@ -58,8 +61,8 @@ public class Parkhaus_Fachlogik implements IObservable {
         return tickets;
     }
 
-    public void addParkschein(String[] params){
-        tickets.add( new Parkschein(params));
+    public void addParkschein(String[] params) {
+        tickets.add(new Parkschein(params));
         IncAnzahlBesucher();
         sumEinnahmen(Integer.parseInt(params[4]));
         notifyObservers();
@@ -70,12 +73,12 @@ public class Parkhaus_Fachlogik implements IObservable {
             Parkschein last = tickets.remove(tickets.size() - 1);
             DecAnzahlBesucher();
             updateSumEinnahmen(Integer.parseInt(last.getParkgebuehr()));
-            tickets.get(tickets.size()-1).setParkgebuehrVorgänger(last.getParkgebuehr());
+            tickets.get(tickets.size() - 1).setParkgebuehrVorgänger(last.getParkgebuehr());
             notifyObservers();
-        } catch( IndexOutOfBoundsException e){ notifyObservers();}
+        } catch (IndexOutOfBoundsException e) {
+            notifyObservers();
+        }
     }
-
-
 
 
     //---------------------------------------------------------------------------------------------
@@ -84,8 +87,8 @@ public class Parkhaus_Fachlogik implements IObservable {
     public JsonArray getJsonArrayParkgebuehren() {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
-        for(Parkschein p : tickets){
-            array.add(Integer.parseInt(p.getParkgebuehr())/100.0);
+        for (Parkschein p : tickets) {
+            array.add(Integer.parseInt(p.getParkgebuehr()) / 100.0);
         }
 
         return array.build();
@@ -96,8 +99,8 @@ public class Parkhaus_Fachlogik implements IObservable {
     public JsonArray getJsonArrayNumber() {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
-        for(Parkschein p : tickets){
-            array.add("Nr."+p.getAutoNr());
+        for (Parkschein p : tickets) {
+            array.add("Nr." + p.getAutoNr());
         }
 
         return array.build();
@@ -119,7 +122,7 @@ public class Parkhaus_Fachlogik implements IObservable {
 
     @Override
     public void notifyObservers() {
-        for( IObserver v : views){
+        for (IObserver v : views) {
             v.update();
         }
     }

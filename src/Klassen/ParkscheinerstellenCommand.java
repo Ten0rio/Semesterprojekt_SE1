@@ -4,9 +4,10 @@ import Interfaces.ICommand;
 
 public class ParkscheinerstellenCommand implements ICommand {
 
-    private String [] ticket;
+    private String[] ticket;
     private Parkhaus_Fachlogik parkhaus;
-    public ParkscheinerstellenCommand (Parkhaus_Fachlogik parkhaus, String [] params){
+
+    public ParkscheinerstellenCommand(Parkhaus_Fachlogik parkhaus, String[] params) {
         this.parkhaus = parkhaus;
         this.ticket = params;
     }

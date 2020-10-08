@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParkscheinTest {
     @Test
-    void parkscheinKonstruktor(){
-        assertDoesNotThrow(()->new Parkschein(new String[]{"0"}));
+    void parkscheinKonstruktor() {
+        assertDoesNotThrow(() -> new Parkschein(new String[]{"0"}));
     }
 
 }

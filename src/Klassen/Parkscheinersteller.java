@@ -6,14 +6,15 @@ public class Parkscheinersteller {
 
     private ICommand command;
 
-    public void saveCommand(ICommand command){
+    public void saveCommand(ICommand command) {
         this.command = command;
     }
 
-    public void activate(){
+    public void activate() {
         command.execute();
     }
-    public ICommand getCommand(){
+
+    public ICommand getCommand() {
         return command;
     }
 

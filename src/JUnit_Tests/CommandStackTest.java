@@ -16,7 +16,7 @@ class CommandStackTest {
     CommandStack commandStack;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         commandStack = new CommandStack();
 
     }
@@ -24,6 +24,8 @@ class CommandStackTest {
     @Test
     void removeCommand() {
 //        assertThrows(EmptyStackException.class,()->{commandStack.removeCommand();});
-        assertDoesNotThrow(()->{commandStack.removeCommand();});
+        assertDoesNotThrow(() -> {
+            commandStack.removeCommand();
+        });
     }
 }
